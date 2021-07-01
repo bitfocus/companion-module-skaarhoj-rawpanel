@@ -152,6 +152,10 @@ exports.getActions = function () {
 		Reboot: {
 			label: 'Reboot Panel',
 		},
+		Refresh: {
+			label: 'Refresh/Check Feedbacks',
+			description: 'Refresh Feedbacks, place this on a 1 sec Trigger',
+		},
 		CustomCommand: {
 			label: 'Custom Command',
 			options: [
@@ -203,7 +207,11 @@ exports.executeAction = function (action) {
 		case 'Reboot':
 			this.sendCommand('Reboot')
 			break
-
+		case 'Refresh':
+			this.checkFeedbacks('tieToHwcLed')
+			this.checkFeedbacks('tieToLcd')
+			break
+	
 		default: // all actions, not mentioned above
 			this.sendCommand(opt.cmd)
 			break
@@ -214,7 +222,7 @@ exports.executeAction = function (action) {
 exports.sendCommand = function(message) {
 	if (message !== undefined) {
 
-		this.debug('sending ', message, 'to', this.config.host)
+		// this.debug('sending ', message, 'to', this.config.host)
 
 		if (this.tcp !== undefined && this.tcp.connected) {
 			this.tcp.send(message + '\n')

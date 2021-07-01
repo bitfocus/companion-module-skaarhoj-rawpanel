@@ -3,6 +3,7 @@ var net = require('net')
 const { executeAction, getActions, sendCommand } = require('./actions')
 const { tcpClient } = require('./tcpClient')
 const { storeData } = require('./storeData')
+const { bank_invalidate } = require('./getBankColor')
 const { getConfigFields } = require('./config')
 const { setFeedbacks } = require('./feedback')
 // const { updateVariableDefinitions } = require('./variables')
@@ -41,11 +42,30 @@ const { setFeedbacks } = require('./feedback')
 
 		this.storeData = storeData
 		this.sendCommand = sendCommand
+		this.bank_invalidate = bank_invalidate
+		this.system = system
 		// this.updateVariableDefinitions = updateVariableDefinitions
+	
+		// system.on('graphics_bank_invalidate', function (Page, Bank) {
+		// 	console.log('TEST')
+		// 	console.log(Page)
+		// 	console.log(Bank)
+
+		// 	console.log(this.banks[Page][Bank])
+		// 	// console.log(`Updating ${page}.${bank} label ${this.banks[page][bank].bgcolor}`)
+		// })
+	
 	}
 
     // Init module
 	init() {
+		this.callbacks = {}
+		this.pages = {}
+		this.bank_info = {}
+		this.pages_getall()
+		this.banks_getall()
+		this.addSystemCallback('graphics_bank_invalidate', this.bank_invalidate.bind(this))
+
 		this.status(1, 'Connecting')
 		tcpClient.bind(this)()
 		this.actions()
@@ -103,6 +123,68 @@ const { setFeedbacks } = require('./feedback')
 		return ((r | g | b) + 128 + 64)
 	}
 
+	addSystemCallback = function (name, cb) {
+		var self = this
+	
+		if (self.callbacks[name] === undefined) {
+			self.callbacks[name] = cb.bind(self)
+			self.system.on(name, cb)
+		}
+	}
+	
+	banks_getall = function () {
+		var self = this
+
+		system.emit('db_get', 'bank', function (banks) {
+			self.banks = banks
+	
+			const new_values = {}
+	
+			for (var p in banks) {
+				for (var b in banks[p]) {
+					var tb = banks[p][b]
+					var k = `${p}_${b}`
+					var v = `b_text_${k}`
+					if (tb.style === 'png') {
+						// need a copy, not a reference
+						self.bank_info[k] = JSON.parse(JSON.stringify(tb))
+						new_values[v] = self.bank_info[k].text = self.check_var_recursion(v, tb.text)
+					} else {
+						new_values[v] = undefined
+					}
+				}
+			}
+	
+			// self.setVariables(new_values)
+		})
+	}
+	
+	pages_getall = function () {
+		var self = this
+	
+		self.system.emit('get_page', function (pages) {
+			self.pages = pages
+		})
+	}
+	
+	check_var_recursion = function (v, realText) {
+		var self = this
+		var newText
+	
+		if (realText) {
+			if (realText.includes(v)) {
+				// recursion error:
+				// button trying to include itself
+				newText = '$RE'
+			} else {
+				system.emit('variable_parse', realText, function (str) {
+					newText = str
+				})
+			}
+		}
+		return newText
+	}
+	
 	// ##########################
 	// #### Instance Actions ####
 	// ##########################
