@@ -2,6 +2,26 @@ exports.setFeedbacks = function (i) {
 	var self = i
 	var feedbacks = {}
 
+	// const buttonColor = [
+	// 	{ id: '128', label: 'Default Color' },
+	// 	{ id: '129', label: 'OFF' },
+	// 	{ id: '130', label: 'White' },
+	// 	{ id: '131', label: 'Warm White' },
+	// 	{ id: '132', label: 'Red' },
+	// 	{ id: '133', label: 'Rose' },
+	// 	{ id: '134', label: 'Pink' },
+	// 	{ id: '135', label: 'Purple' },
+	// 	{ id: '136', label: 'Amber' },
+	// 	{ id: '137', label: 'Yellow' },
+	// 	{ id: '138', label: 'Dark blue' },
+	// 	{ id: '139', label: 'Blue' },
+	// 	{ id: '140', label: 'Ice' },
+	// 	{ id: '141', label: 'Cyan' },
+	// 	{ id: '142', label: 'Spring' },
+	// 	{ id: '143', label: 'Green' },
+	// 	{ id: '144', label: 'Mint' },
+	// ]	
+
 	const HWC = {
 		type: 'number',
 		label: 'HWC on the panel',
@@ -17,19 +37,180 @@ exports.setFeedbacks = function (i) {
 	// const bgColorOrange = self.rgb(255, 102, 0)
 
 	feedbacks.tieToHwc = {
-		label: 'Tie HWC Press To This Button',
+		label: 'Generic - Tie HWC Press To This Button',
 		description: 'Tie a HWC Press On The Panel To This Button',
 		options: [HWC],
-		callback: function (feedback, bank, info) {
+		callback: async function (feedback, bank, info) {
 			var hwc = self.data.hwc
-			if (hwc.type == 'Button' || hwc.type == '4-way Button') {
-				if (String(feedback.options.hwc) == hwc.id) {
-					// console.log(bank)
-					// console.log(info)
+			if (String(feedback.options.hwc) == hwc.id) {
 
-					// Press any button on any page, that have the hwc tied to it
-					self.system.emit('bank_pressed', info.page, info.bank, hwc.dir)
-				}	
+				if (hwc.type == 'Button' || hwc.type == '4-way Button') {
+					self.system.emit('bank_pressed', info.page, info.bank, hwc.press)
+				} 
+
+				else if (hwc.type == 'Encoder' && hwc.press == true) {
+					self.system.emit('bank_pressed', info.page, info.bank, true)
+					await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+					self.system.emit('bank_pressed', info.page, info.bank, false)
+				}
+
+				else if (hwc.type == 'Joystick' || hwc.type == 'Fader') {
+					
+					// press if outside deadzone
+					if (hwc.val <= -50 || hwc.val >= 50) { 
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					}
+					
+					else { // Release if within dead zone
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					}
+
+				}
+			}
+		}
+	},
+	feedbacks.tieToHwc4Way = {
+		label: '4-Way/Edge Button - Tie HWC To This Button',
+		description: 'Tie a HWC 4-Way Button On The Panel To This Button',
+		options: [
+			HWC,
+			{
+				type: 'dropdown',
+				label: 'Select Click Type',
+				id: 'cmd',
+				default: 'All',
+				choices: [
+					{ id: 'All', label: 'Any/All (Normal Button)' },
+					{ id: 'Top', label: 'Top Edge' },
+					{ id: 'Bottom', label: 'Bottom Edge' },
+					{ id: 'Left', label: 'Left Edge' },
+					{ id: 'Right', label: 'Right Edge' },
+				],
+			},
+		],
+		callback: async function (feedback, bank, info) {
+			var hwc = self.data.hwc
+			if (String(feedback.options.hwc) == hwc.id) {
+				if (hwc.type == 'Button' || hwc.type == '4-way Button') {
+					x = feedback.options.cmd
+
+					// Release Press
+					if (hwc.press == false) {
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					}
+
+					// ON Any Edge = Press
+					else if (x == 'All') {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					}
+
+					// Only on Top or Botton or Left or Rigt Edge
+					else if (x == hwc.side) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					}
+				}
+			}
+		}
+	},
+	feedbacks.tieToHwcEncoder = {
+		label: 'Encoder - Tie HWC To This Button',
+		description: 'Tie a HWC Encoder On The Panel To This Button',
+		options: [
+			HWC,
+			{
+				type: 'dropdown',
+				label: 'Select Click Type',
+				id: 'cmd',
+				default: 'Press',
+				choices: [
+					{ id: 'Press', label: 'Press Down' },
+					{ id: 'Left', label: 'Rotate Left' },
+					{ id: 'Right', label: 'Rotate Right' },
+				],
+			},
+		],
+		callback: async function (feedback, bank, info) {
+			var hwc = self.data.hwc
+			if (String(feedback.options.hwc) == hwc.id) {
+				if (hwc.type == 'Encoder') {
+					x = feedback.options.cmd
+
+					// Press
+					if (x == 'Press' && hwc.press == true) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					} 
+
+					// Left
+					else if (x == 'Left' && hwc.val == -1) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					}
+		
+					// Right
+					else if (x == 'Right' && hwc.val == 1) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					}
+				}
+			}
+		}
+	},
+	feedbacks.tieToHwcJoystick = {
+		label: 'Joystick - Tie HWC To This Button',
+		description: 'Tie a HWC Joystick On The Panel To This Button',
+		options: [
+			HWC,
+			{
+				type: 'dropdown',
+				label: 'Select Click Type',
+				id: 'cmd',
+				default: 'Both',
+				choices: [
+					{ id: 'Both', label: 'Both Up and Down' },
+					{ id: 'Up', label: 'Only on Up/Right' },
+					{ id: 'Down', label: 'Only on Down/Left' },
+				],
+			},
+			{
+				type: 'number',
+				label: 'Deadzone (1-450, Default 50)',
+				id: 'deadzone',
+				default: 50,
+				min: 1,
+				max: 450
+			},
+		],
+		callback: async function (feedback, bank, info) {
+			var hwc = self.data.hwc
+			if (String(feedback.options.hwc) == hwc.id) {
+				if (hwc.type == 'Joystick') {
+					x = feedback.options.cmd
+					d = feedback.options.deadzone
+
+					// Both
+					if (x == 'Both' && (hwc.val >= d || hwc.val <= (d*-1))) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					} 
+
+					// Up
+					else if (x == 'Up' && hwc.val >= d) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					}
+		
+					// Down
+					else if (x == 'Down' && hwc.val <= (d*-1)) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					}
+
+					// Release
+					else if (hwc.val > (d*-1) || hwc.val < d) {
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					} 
+				}
 			}
 		}
 	},
@@ -53,7 +234,13 @@ exports.setFeedbacks = function (i) {
 				id: 'autoOnOff',
 				label: 'Auto Turn ON/OFF',
 				default: true,
-			},		
+			},
+			{
+				type: 'checkbox',
+				id: 'dimmed',
+				label: 'Set Dimmed When OFF?',
+				default: true,
+			},
 		],
 		callback: function (feedback, bank, info) {
 			let b_color
@@ -69,24 +256,25 @@ exports.setFeedbacks = function (i) {
 				color = b_bgcolor
 			}
 
-			// console.log(b_color)
-			// console.log(b_bgcolor)
-
-			// console.log(bank)
-			// console.log(feedback)
-	
 			// convert color
 			let rgb = self.convertIntColorToRawPanelColor(color)
 
 			// console.log(self)
 			// Send button BG/FG color to remote HWC LED
-			self.sendCommand('HWCc#' + feedback.options.hwc + '=' + rgb)
 			if (feedback.options.autoOnOff == true) {
 				if (rgb == (128 + 64)) {
-					self.sendCommand('HWC#' + feedback.options.hwc + '=0')
+					if (feedback.options.dimmed == true) {
+						self.sendCommand('HWCc#' + feedback.options.hwc + '=128')
+						self.sendCommand('HWC#' + feedback.options.hwc + '=5') // Dimmed
+					} else {
+						self.sendCommand('HWC#' + feedback.options.hwc + '=0') // OFF
+					}
 				} else {
-					self.sendCommand('HWC#' + feedback.options.hwc + '=36')
+					self.sendCommand('HWCc#' + feedback.options.hwc + '=' + rgb)
+					self.sendCommand('HWC#' + feedback.options.hwc + '=36') // ON
 				}
+			} else {
+				self.sendCommand('HWCc#' + feedback.options.hwc + '=' + rgb)
 			}
 		}
 	},
@@ -110,6 +298,11 @@ exports.setFeedbacks = function (i) {
 				cmd = String(bank.text.split('$(')[0]) + temp + String(bank.text.split('$(')[1]).split(')')[1]
 			}
 
+			// If the text includes a line break, replace it with a space
+			if (cmd.includes('\\n')) {
+				cmd = cmd.replace('\\n', ' ')
+			}
+			
 			self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||')
 		}
 	}

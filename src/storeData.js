@@ -12,12 +12,15 @@ exports.storeData = function (str) {
             switch (x[0]) {
                 case '_model':
                     data.model = x[1]
+                if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_serial':
                     data.serial = x[1]
+                    if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_version':
                     data.version = x[1]
+                    if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;        
                 default:
                     break;
@@ -28,6 +31,7 @@ exports.storeData = function (str) {
 
     // Update if the panel goes to sleep or wakes up
     if (str.includes('_isSleeping')) {
+        if (this.config.debug) {this.log('warn','Recived: ' + str)}
         if (str.split('_isSleeping=') == '1') {
             data.sleep = 'True'
         } else {
@@ -40,14 +44,16 @@ exports.storeData = function (str) {
     if (str.includes('_state')) {
         // State: 0-9
         // REG: Master, P, Q, R, S
-        console.log(str)
+        if (this.config.debug) {this.log('warn','Recived: ' + str)}
+        this.debug(str)
     }
 
     // Update if shift : reg changes
     if (str.includes('_shift')) {
         // Level: 0-10
         // REG: Master, A, B, C, D
-        console.log(str)
+        if (this.config.debug) {this.log('warn','Recived: ' + str)}
+        this.debug(str)
     }
 
     // check if we recieved a keypress
@@ -57,13 +63,14 @@ exports.storeData = function (str) {
         hwc.id = ''
         hwc.type = ''
         hwc.side = ''
-        hwc.val = 0
+        hwc.press = ''
+        hwc.val = ''
 
         // Button Click
         if (str.includes('Up') || str.includes('Down')) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
             hwc.type = 'Button'
-            hwc.dir = str.includes('Down')
+            hwc.press = str.includes('Down')
 
             // 4-Way Button Click:
             if (str.includes('.')) {
@@ -87,25 +94,14 @@ exports.storeData = function (str) {
                     default:
                         break
                 }
-                self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' Side: ' + hwc.side + ' Dir: ' + hwc.dir)
-            } else {
-                self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' Dir: ' + hwc.dir)
             }
-
-            // press matching button on page 1, needs to be changed
-            // self.system.emit('bank_pressed', 1, hwcId, hwcDir)
         }
 
         // Encoder press
         else if (str.includes('Press')) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
             hwc.type = 'Encoder'
-            hwc.dir = str.includes('Press')
-
-            self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' Dir: ' + hwc.dir)
-            // press matching button on page 1, needs to be changed
-            // self.system.emit('bank_pressed', 1, hwcId, true)
-            // self.system.emit('bank_pressed', 1, hwcId, false)
+            hwc.press = str.includes('Press')
         }
 
         // Encoder turn
@@ -113,11 +109,6 @@ exports.storeData = function (str) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
             hwc.type = 'Encoder'
             hwc.val = parseInt(str.split('Enc:')[1])
-
-            self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' Side: ' + hwc.val)
-            // press matching button on page 1, needs to be changed
-            // self.system.emit('bank_pressed', 1, hwcId, true)
-            // self.system.emit('bank_pressed', 1, hwcId, false)
         }
         
         // Fader change
@@ -127,26 +118,31 @@ exports.storeData = function (str) {
 
             // Parse analog value, could be used for tbar in vmix and alike
             hwc.val = parseInt(String(str.split('=')[1]).split(':')[1])
-            self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' value: ' + hwc.val)
         }
 
         // Joystick change (speed)
         else if (str.includes('Speed')) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
-            hwc.type = 'Fader'
+            hwc.type = 'Joystick'
 
             // Parse analog value, could be used for tbar in vmix and alike
             hwc.val = parseInt(String(str.split('=')[1]).split(':')[1])
-            self.debug('HWC: ' + hwc.id + ' Type: ' + hwc.type + ' value: ' + hwc.val)
         }
 
+        if (this.config.debug) {this.log('warn','Recived: HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val)}
+        self.debug('HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val)
+
         this.data.hwc = hwc
-        this.checkFeedbacks()
+        this.checkFeedbacks('tieToHwc') // Update Keypress Feedback
+        if (hwc.type == 'Button' || hwc.type == '4-way Button') { this.checkFeedbacks('tieToHwc4Way') } // Update 4-Way Button Feedback
+        if (hwc.type == 'Encoder') { this.checkFeedbacks('tieToHwcEncoder') } // Update Encoder Feedback
+        if (hwc.type == 'Joystick') { this.checkFeedbacks('tieToHwcJoystick') } // Update Encoder Feedback
         var hwc = this.data.hwc
         hwc.id = ''
         hwc.type = ''
         hwc.side = ''
-        hwc.val = 0
+        hwc.press = ''
+        hwc.val = ''
         this.data.hwc = hwc
    }
 

@@ -154,7 +154,15 @@ exports.getActions = function () {
 		},
 		Refresh: {
 			label: 'Refresh/Check Feedbacks',
-			description: 'Refresh Feedbacks, place this on a 1 sec Trigger',
+			description: 'Refresh Feedbacks, Optional to clead Displays and Leds First',
+			options: [
+				{
+					type: 'checkbox',
+					id: 'clear',
+					label: 'Clear Panel Firts?',
+					default: true,
+				},		
+			],
 		},
 		CustomCommand: {
 			label: 'Custom Command',
@@ -208,6 +216,9 @@ exports.executeAction = function (action) {
 			this.sendCommand('Reboot')
 			break
 		case 'Refresh':
+			if (opt.clear) {
+				this.sendCommand('Clear')				
+			}
 			this.checkFeedbacks('tieToHwcLed')
 			this.checkFeedbacks('tieToLcd')
 			break
@@ -219,15 +230,17 @@ exports.executeAction = function (action) {
 
 }
 
-exports.sendCommand = function(message) {
+exports.sendCommand = async function(message) {
 	if (message !== undefined) {
 
-		// this.debug('sending ', message, 'to', this.config.host)
+		// this.debug('sending', message, 'to', this.config.host)
+		if (this.config.debug) {this.log('info','Sending: ' + message)}
 
 		if (this.tcp !== undefined && this.tcp.connected) {
 			this.tcp.send(message + '\n')
 		} else {
 			this.debug('Socket not connected :(')
 		}
+		await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](50) // 5 mili sec
 	}
 }

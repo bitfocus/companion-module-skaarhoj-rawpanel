@@ -28,7 +28,7 @@ const { setFeedbacks } = require('./feedback')
 				id: '',
 				type: '',
 				side: '',
-				dir: '',
+				press: '',
 				val: '',
 			},
 		}
@@ -38,23 +38,14 @@ const { setFeedbacks } = require('./feedback')
 		this.config.host = this.config.host || ''
 		this.config.tcpPort = this.config.tcpPort || 9923
 		this.config.debug = this.config.debug || false
-		this.config.apiPollInterval = this.config.apiPollInterval !== undefined ? this.config.apiPollInterval : 500
+		this.config.timeout = this.config.timeout !== undefined ? this.config.timeout : 5000
+		this.config.refresh = this.config.refresh !== undefined ? this.config.refresh : 30000
 
 		this.storeData = storeData
 		this.sendCommand = sendCommand
 		this.bank_invalidate = bank_invalidate
 		this.system = system
 		// this.updateVariableDefinitions = updateVariableDefinitions
-	
-		// system.on('graphics_bank_invalidate', function (Page, Bank) {
-		// 	console.log('TEST')
-		// 	console.log(Page)
-		// 	console.log(Bank)
-
-		// 	console.log(this.banks[Page][Bank])
-		// 	// console.log(`Updating ${page}.${bank} label ${this.banks[page][bank].bgcolor}`)
-		// })
-	
 	}
 
     // Init module
@@ -67,9 +58,9 @@ const { setFeedbacks } = require('./feedback')
 		this.addSystemCallback('graphics_bank_invalidate', this.bank_invalidate.bind(this))
 
 		this.status(1, 'Connecting')
-		tcpClient.bind(this)()
 		this.actions()
 		this.init_feedbacks()
+		tcpClient.bind(this)()
 		// initPresets.bind(this)()
 		// this.updateVariableDefinitions()
 	}
@@ -77,9 +68,9 @@ const { setFeedbacks } = require('./feedback')
     // New config saved
 	updateConfig(config) {
 		this.config = config
-		tcpClient.bind(this)()
 		this.actions()
 		this.init_feedbacks()
+		tcpClient.bind(this)()
 		// initPresets.bind(this)()
 	}
 
@@ -96,6 +87,14 @@ const { setFeedbacks } = require('./feedback')
 			delete this.tcp
 		}
 	
+		if (this.pollAPI) {
+			clearInterval(this.pollAPI)
+		}
+
+		if (this.Refresh) {
+			clearInterval(this.Refresh)
+		}
+
 		this.debug('destroy', this.id)
 	}
 

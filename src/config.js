@@ -23,6 +23,24 @@ exports.getConfigFields = function () {
 			value: ' ',
 		},
 		{
+			type: 'number',
+			label: 'TCP Timeout (1 sec -> 5 min, default 5 sec = 5000)',
+			id: 'timeout',
+			width: 12,
+			default: 5000,
+			min: 1000,
+			max: 300000
+		},
+		{
+			type: 'number',
+			label: 'Backup LCD Refresh (5 sec -> 10 min, default 30 sec = 30000)',
+			id: 'refresh',
+			width: 12,
+			default: 30000,
+			min: 5000,
+			max: 600000
+		},
+		{
 			type: 'checkbox',
 			id: 'debug',
 			width: 1,
@@ -36,26 +54,6 @@ exports.getConfigFields = function () {
 			label: 'Enable Debug To Log Window',
 			value:
 				'Requires Companion to be restarted. But this will allow you the see what is being sent from the module and what is being received from the camera.',
-		},
-		{
-			type: 'text',
-			id: 'apiPollInfo',
-			width: 12,
-			label: 'API Poll Interval warning',
-			value:
-				'Adjusting the API Polling Interval can impact performance. <br />' +
-				'A lower invterval allows for more responsive feedback, but may impact CPU usage. <br />' +
-				'See the help section for more details.',
-		},
-		{
-			type: 'textinput',
-			id: 'apiPollInterval',
-			label: 'API Polling interval (ms) (default: 500, min: 250)',
-			width: 12,
-			default: 500,
-			min: 250,
-			max: 10000,
-			regex: this.REGEX_NUMBER,
 		},
 	]
 }
