@@ -18,7 +18,8 @@ exports.bank_invalidate = function (page, bank) {
 
 	if (oldText !== newText) {
 		self.bank_info[k].text = newText
-		self.setVariable(`b_text_${k}`, newText)
+		// self.setVariable(`b_text_${k}`, newText)
+		self.checkFeedbacks('tieToLcd') // Update screens on a variable change
 	} else {
 		// feedback/color change
 		// Fetch feedback-overrides for bank
@@ -36,6 +37,7 @@ exports.bank_invalidate = function (page, bank) {
 			}
 		})
 		if (changed) {
+			// Update screens and LED's on a background change
 			self.checkFeedbacks('tieToLcd')
 			self.checkFeedbacks('tieToHwcLed')
 		}
