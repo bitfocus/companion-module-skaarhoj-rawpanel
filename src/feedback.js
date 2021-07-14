@@ -297,13 +297,41 @@ exports.setFeedbacks = function (i) {
 				self.system.emit('variable_get', selctInstances, selctVariable, (definitions) => (temp = definitions))
 				cmd = String(bank.text.split('$(')[0]) + temp + String(bank.text.split('$(')[1]).split(')')[1]
 			}
+			
+			// If the text is longer that 24 characters split it up in two
+			if (cmd.length >= 25) {
+				x = cmd.split('\\n')
+				if (x.length >= 3) {
+					cmd = cmd.replace(' ', '\\n')
+				}
+
+				if (x.length == 1) {
+					// cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
+					y = cmd.match(/.{1,24}/g)
+					console.log(y.length)
+					if (y.length <= 2) {
+						cmd = y[0] + '\\n' + y[1]
+					} else if (y.length >= 3) {
+						cmd = y[0] + '\\n' + y[1] + '\\n' + y[2]
+					}
+				}
+			}
 
 			// If the text includes a line break, replace it with a space
 			if (cmd.includes('\\n')) {
-				cmd = cmd.replace('\\n', ' ')
+				x = cmd.split('\\n')
+				if (x.length == 2) {
+					console.log(x.length)
+					self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + x[0] + '|' + x[1] + '|')
+				} else if (x.length == 3) {
+					self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
+				} else {
+					cmd = cmd.replace('\\n', ' ')
+					self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||')
+				}
+			} else {
+				self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||')
 			}
-			
-			self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||')
 		}
 	}
 
