@@ -1,4 +1,7 @@
+var { MODELS } = require('./models.js')
+
 exports.getConfigFields = function () {
+	
 	return [
 		{
 			type: 'textinput',
@@ -14,6 +17,22 @@ exports.getConfigFields = function () {
 			width: 4,
 			default: 9923,
 			regex: this.REGEX_PORT,
+		},
+		{
+			type: 'text',
+			id: 'modelInfo',
+			width: 12,
+			label: 'SKAARHOJ Panel',
+			value: 'Please Select the SKAARHOJ model you have or feel leave it on auto. This only affects the avaliable variables',
+		},
+		{
+			type: 'dropdown',
+			id: 'model',
+			label: 'Select Your SKAARHOJ Panel',
+			width: 12,
+			default: 'Auto',
+			choices: MODELS,
+			minChoicesForSearch: 5,
 		},
 		{
 			type: 'text',

@@ -24,6 +24,34 @@ const { setFeedbacks } = require('./feedback')
 			serial: 'NaN',
 			version: 'Nan',
 			sleep: 'False',
+			state : {
+				Master: 0,
+				P: 0,
+				Q: 0,
+				R: 0,
+				S: 0,
+			},
+			shift : {
+				Master: 0,
+				A: 0,
+				B: 0,
+				C: 0,
+				D: 0,
+			},
+			mem : {
+				A: 0,
+				B: 0,
+				C: 0,
+				D: 0,
+				E: 0,
+				F: 0,
+				G: 0,
+				H: 0,
+				I: 0,
+				J: 0,
+				K: 0,
+				L: 0,
+			},
 			hwc: {
 				id: '',
 				type: '',
@@ -148,12 +176,14 @@ const { setFeedbacks } = require('./feedback')
 						// need a copy, not a reference
 						self.bank_info[k] = JSON.parse(JSON.stringify(tb))
 						new_values[v] = self.bank_info[k].text = self.check_var_recursion(v, tb.text)
+						self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
 					} else {
+						self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
 						new_values[v] = undefined
 					}
 				}
 			}
-	
+
 			// self.setVariables(new_values)
 		})
 	}

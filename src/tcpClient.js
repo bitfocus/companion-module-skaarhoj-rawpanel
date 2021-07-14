@@ -1,3 +1,4 @@
+const { raw } = require('express')
 var tcp = require('../../../tcp')
 const { storeData } = require('./storeData')
 
@@ -94,8 +95,11 @@ exports.tcpClient = function () {
                     self.status(self.STATE_OK)
                     break;
                 default:
-                    // self.debug(str)
-                    self.storeData(str)
+                    str = str.split('\n')
+                    for (let index = 0; index < str.length; index++) {
+                        // self.debug(str[index])
+                        self.storeData(str[index])                        
+                    }
                     break;
             }
 
