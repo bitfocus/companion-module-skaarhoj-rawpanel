@@ -48,7 +48,7 @@ exports.setFeedbacks = function (i) {
 					self.system.emit('bank_pressed', info.page, info.bank, hwc.press)
 				} 
 
-				else if (hwc.type == 'Encoder' && hwc.press == true) {
+				else if (hwc.type == 'Encoder' && hwc.press == 'true') {
 					self.system.emit('bank_pressed', info.page, info.bank, true)
 					await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 					self.system.emit('bank_pressed', info.page, info.bank, false)
@@ -95,7 +95,7 @@ exports.setFeedbacks = function (i) {
 					x = feedback.options.cmd
 
 					// Release Press
-					if (hwc.press == false) {
+					if (hwc.press == 'false') {
 						self.system.emit('bank_pressed', info.page, info.bank, false)
 					}
 
@@ -136,7 +136,7 @@ exports.setFeedbacks = function (i) {
 					x = feedback.options.cmd
 
 					// Press
-					if (x == 'Press' && hwc.press == true) {
+					if (x == 'Press' && hwc.press == 'true') {
 						self.system.emit('bank_pressed', info.page, info.bank, true)
 						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 						self.system.emit('bank_pressed', info.page, info.bank, false)

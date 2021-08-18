@@ -32,7 +32,7 @@ exports.tcpClient = function () {
 
 		self.tcp.on('error', function (err) {
 			self.debug('Network error', err)
-			self.status(self.STATE_ERROR, err)
+            self.status(self.STATE_ERROR, err)
 			self.log('error', 'Network error: ' + err.message)
 
             if (self.pollAPI) {
@@ -45,6 +45,14 @@ exports.tcpClient = function () {
 				delete self.Refresh
 			}
 
+            self.sendAPI('QUIT')
+            self.data.satConnected = false
+            self.data.startupAPI = true
+            if (self.api !== undefined) {
+                self.api.destroy()
+                delete self.api
+            }
+    
         })
 
 		self.tcp.on('connect', function () {
@@ -54,14 +62,12 @@ exports.tcpClient = function () {
             if (self.config.debug == true) {
                 self.log('warn', 'Connected to panel: ' + host + ':' + port)
             }
-
             self.pollAPI = setInterval( () => {
                     self.sendCommand('ping') // Ping the panel
                     // self.sendCommand('list') // Get model and version on connection
                 },
                 timeout < 100 ? 100 : timeout
             )
-
             self.Refresh = setInterval( () => {
                 self.checkFeedbacks('tieToHwcLed')  // Send initial LED data to the panel
                 self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
@@ -97,7 +103,7 @@ exports.tcpClient = function () {
                 default:
                     str = str.split('\n')
                     for (let index = 0; index < str.length; index++) {
-                        // self.debug(str[index])
+                        self.debug(str[index])
                         self.storeData(str[index])                        
                     }
                     break;

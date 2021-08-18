@@ -5,28 +5,31 @@ exports.storeData = function (str) {
     data = self.data
 
     // Store model nr. and serial nr.
-    if (str.includes('_model' || '_serial' || '_version')) {
+    if (str.includes('_model') || str.includes('_serial') || str.includes('_version')) {
         str_arr = str.split('\n')
         str_arr.forEach(element => {
             x = element.split('=')
             switch (x[0]) {
                 case '_model':
-                    data.model = x[1]
+                    this.data.model = x[1]
                 if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_serial':
-                    data.serial = x[1]
+                    this.data.serial = x[1]
                     if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_version':
-                    data.version = x[1]
+                    this.data.version = x[1]
                     if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
-                    break;        
+ 
+                    if (self.data.startupAPI == true) {
+                        self.satelliteAPI.bind(this)()
+                    }
+                    break;
                 default:
                     break;
             }
         });
-        this.data = data
     }
 
     // Update if the panel goes to sleep or wakes up
@@ -109,7 +112,10 @@ exports.storeData = function (str) {
         if (str.includes('Up') || str.includes('Down')) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
             hwc.type = 'Button'
-            hwc.press = str.includes('Down')
+            hwc.press = 'false'
+            if (str.includes('Down') == true) {
+                hwc.press = 'true'
+            }
 
             // 4-Way Button Click:
             if (str.includes('.')) {
@@ -140,7 +146,9 @@ exports.storeData = function (str) {
         else if (str.includes('Press')) {
             hwc.id = String(str.split('HWC#')).split('=')[0]
             hwc.type = 'Encoder'
-            hwc.press = str.includes('Press')
+            if (str.includes('Press') == true) {
+                hwc.press = 'true'
+            }
         }
 
         // Encoder turn
@@ -177,6 +185,7 @@ exports.storeData = function (str) {
 
         this.data.hwc = hwc
         this.checkFeedbacks('tieToHwc') // Update Keypress Feedback
+        if (self.config.satEnable == true && self.data.satConnected == true) {this.hwcToSat()}
         if (hwc.type == 'Button' || hwc.type == '4-way Button') { this.checkFeedbacks('tieToHwc4Way') } // Update 4-Way Button Feedback
         if (hwc.type == 'Encoder') { this.checkFeedbacks('tieToHwcEncoder') } // Update Encoder Feedback
         if (hwc.type == 'Joystick') { this.checkFeedbacks('tieToHwcJoystick') } // Update Encoder Feedback

@@ -2,6 +2,7 @@ const instance_skel = require('../../../instance_skel')
 var net = require('net')
 const { executeAction, getActions, sendCommand } = require('./actions')
 const { tcpClient } = require('./tcpClient')
+const { satelliteAPI, sendAPI, hwcToSat } = require('./satelliteAPI')
 const { storeData } = require('./storeData')
 const { bank_invalidate } = require('./getBankColor')
 const { getConfigFields } = require('./config')
@@ -20,6 +21,8 @@ const { setFeedbacks } = require('./feedback')
 		// Default instance state
 		this.data = {
 			startup: true,
+			startupAPI: true,
+			satConnected: false,
 			model: 'NaN',
 			serial: 'NaN',
 			version: 'Nan',
@@ -71,6 +74,9 @@ const { setFeedbacks } = require('./feedback')
 
 		this.storeData = storeData
 		this.sendCommand = sendCommand
+		this.satelliteAPI = satelliteAPI
+		this.sendAPI = sendAPI
+		this.hwcToSat = hwcToSat
 		this.bank_invalidate = bank_invalidate
 		this.system = system
 		// this.updateVariableDefinitions = updateVariableDefinitions
@@ -114,7 +120,12 @@ const { setFeedbacks } = require('./feedback')
 			this.tcp.destroy()
 			delete this.tcp
 		}
-	
+
+		if (this.api !== undefined) {
+			this.api.destroy()
+			delete this.api
+		}
+
 		if (this.pollAPI) {
 			clearInterval(this.pollAPI)
 		}
