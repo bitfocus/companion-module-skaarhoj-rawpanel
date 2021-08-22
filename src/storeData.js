@@ -1,3 +1,4 @@
+const { json } = require("express")
 const { keyBy } = require("lodash")
 
 exports.storeData = function (str) {
@@ -12,14 +13,17 @@ exports.storeData = function (str) {
             switch (x[0]) {
                 case '_model':
                     this.data.model = x[1]
-                if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
+                    this.setVariable(`model`, this.data.model)
+                    if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_serial':
                     this.data.serial = x[1]
+                    this.setVariable(`serial_nr`, this.data.serial)
                     if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
                     break;
                 case '_version':
                     this.data.version = x[1]
+                    this.setVariable(`version`, this.data.version)
                     if (this.config.debug) {this.log('warn','Recived: ' + x[0] + ': ' + x[1])}
  
                     if (self.data.startupAPI == true) {
@@ -180,6 +184,42 @@ exports.storeData = function (str) {
             hwc.type = 'Button LED Update'
         }
 
+        // Update variables for: Faders, Joysticks and Potmeters
+        const type = this.json_data.hwc[hwc.id-1].type
+        if (type !== null) {
+            if (type.in === 'av') {
+                if (hwc.val !== null) {
+                    this.setVariable(`hwc_${hwc.id}_fader`, hwc.val)
+                } else {
+                    this.setVariable(`hwc_${hwc.id}_fader`, '0')
+                }
+            } else if (type.in === 'ah') {
+                if (hwc.val !== null) {
+                    this.setVariable(`hwc_${hwc.id}_potentiometer`, hwc.val)
+                } else {
+                    this.setVariable(`hwc_${hwc.id}_potentiometer`, '0')
+                }
+            } else if (type.in === 'ar') {
+                if (hwc.val !== null) {
+                    this.setVariable(`hwc_${hwc.id}_a_rotation`, hwc.val)
+                } else {
+                    this.setVariable(`hwc_${hwc.id}_a_rotation`, '0')
+                }
+            } else if (type.in === 'iv' || hwc.type.in === 'ih') {
+                if (hwc.val !== null) {
+                    this.setVariable(`hwc_${hwc.id}_joystick`, hwc.val)
+                } else {
+                    this.setVariable(`hwc_${hwc.id}_joystick`, '0')
+                }
+            } else if (type.in === 'ir') {
+                if (hwc.val !== null) {
+                    this.setVariable(`hwc_${hwc.id}_i_rotation`, hwc.val)
+                } else {
+                    this.setVariable(`hwc_${hwc.id}_i_rotation`, '0')
+                }
+            }
+        }
+
         // if (this.config.debug) {this.log('warn','Recived: HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val + ' | CMD: HWC#' + str)}
         // self.debug('HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val + ' | CMD: HWC#' + str)
 
@@ -189,6 +229,7 @@ exports.storeData = function (str) {
         if (hwc.type == 'Button' || hwc.type == '4-way Button') { this.checkFeedbacks('tieToHwc4Way') } // Update 4-Way Button Feedback
         if (hwc.type == 'Encoder') { this.checkFeedbacks('tieToHwcEncoder') } // Update Encoder Feedback
         if (hwc.type == 'Joystick') { this.checkFeedbacks('tieToHwcJoystick') } // Update Encoder Feedback
+        this.updateVariableDefinitions
         var hwc = this.data.hwc
         hwc.id = ''
         hwc.type = ''

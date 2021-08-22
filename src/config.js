@@ -23,7 +23,7 @@ exports.getConfigFields = function () {
 			id: 'modelInfo',
 			width: 12,
 			label: 'SKAARHOJ Panel',
-			value: 'Please Select the SKAARHOJ model you have or feel leave it on auto. This only affects the avaliable variables',
+			value: 'Please Select the SKAARHOJ model you have or feel free to leave it on auto. This will only affect the available variables.',
 		},
 		{
 			type: 'dropdown',
@@ -53,7 +53,7 @@ exports.getConfigFields = function () {
 			id: 'satInfo',
 			width: 11,
 			label: 'Companion Satellite API v2.0',
-			value: 'By Enabling the satellite API you will gain acces to all 32 buttons just like with the normal streamdeck, it even supports going to difrent pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by ataching the feedbacks to specific buttons and giving them the apporpiate HWC ID\'s.<br/>In order to Use these 32 buttons, please type what <b>HWC ID</b> you want to tie to each button below:',
+			value: 'Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID\'s.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:',
 		},
 		{
 			type: 'text',
@@ -375,6 +375,20 @@ exports.getConfigFields = function () {
 			value: ' ',
 		},
 		{
+			type: 'checkbox',
+			id: 'autoDim',
+			width: 1,
+			label: 'Enable',
+			default: true,
+		},
+		{
+			type: 'text',
+			id: 'satInfo',
+			width: 11,
+			label: 'LED Feedback, Auto dim or off? (Might need Companion or the module to be restarted)',
+			value: 'If this is enabled, all HWC\'s that has an LED will light a dim white when the button is black in companion (mimics normal SKAARHOJ behaviour). Turn this off if you want them to turn completely off. (This would be more in line with how companion does it usually)',
+		},
+		{
 			type: 'number',
 			label: 'TCP Timeout (1 sec -> 5 min, default 5 sec = 5000)',
 			id: 'timeout',
@@ -405,7 +419,7 @@ exports.getConfigFields = function () {
 			width: 11,
 			label: 'Enable Debug To Log Window',
 			value:
-				'Requires Companion to be restarted. But this will allow you the see what is being sent from the module and what is being received from the camera.',
+				'Requires Companion to be restarted. But this will allow you the see what is being sent from the module and what is being received from the panel.',
 		},
 	]
 }

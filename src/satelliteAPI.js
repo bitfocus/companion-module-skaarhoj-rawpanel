@@ -29,10 +29,6 @@ exports.satelliteAPI = function () {
 
         self.api.on('connect', function () {
             self.data.startupAPI = false
-            // self.debug('Connected to panel: ' + host + ':' + port)
-            // if (self.config.debug == true) {
-            //     self.log('warn', 'Connected to panel: ' + host + ':' + port)
-            // }
         })
 
         self.api.on('data', function (data) {
@@ -83,23 +79,38 @@ exports.satelliteAPI = function () {
                     self.debug('Sat Key State')
                     self.debug(str)
 
+                    // TODO: Missing handler to clear buttons that was used previosly, but not with a new config
+
                     let key = 1 + parseInt((str.split('KEY=')[1]).split(' ')[0])
+                    let config_key = self.config['btn_' + key]
+
+                    // skip if nothing is selected
+                    if (config_key == 0 || config_key == '') {
+                        continue                        
+                    }
 
                     if (str.includes('COLOR=#')) {
                         let rawColor = (str.split('COLOR=#')[1]).split(' ')[0]
                         color = parseInt(rawColor, 16)
                         let rgb = self.convertIntColorToRawPanelColor(color)
 
-                        self.debug(key)
-                        self.debug(color)
+                        // self.debug(key)
+                        // self.debug(config_key)
+                        // self.debug(color)
+
+                        // Send Placeholder Text to the LCD's
+                        self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
 
                         if (rgb == (128 + 64)) {
-                            self.sendCommand('HWCc#' + key + '=128')
-                            self.sendCommand('HWC#' + key + '=5') // Dimmed
-                            // self.sendCommand('HWC#' + '1' + '=0') // OFF
+                            if (self.config.autoDim == true) {
+                                self.sendCommand('HWCc#' + config_key + '=128')
+                                self.sendCommand('HWC#' + config_key + '=5') // Dimmed
+                            } else {
+                                self.sendCommand('HWC#' + config_key + '=0') // OFF
+                            }
                         } else {
-                            self.sendCommand('HWCc#' + key + '=' + rgb)
-                            self.sendCommand('HWC#' + key + '=36') // ON
+                            self.sendCommand('HWCc#' + config_key + '=' + rgb)
+                            self.sendCommand('HWC#' + config_key + '=36') // ON
                         }    
                     }
 

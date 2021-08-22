@@ -1,7 +1,5 @@
 const { raw } = require('express')
 var tcp = require('../../../tcp')
-const { storeData } = require('./storeData')
-
 exports.tcpClient = function () {
     var self = this
     var host = self.config.host
@@ -26,11 +24,11 @@ exports.tcpClient = function () {
 	if (self.config.host) {
 		self.tcp = new tcp(host, port)
 
-		self.tcp.on('status_change', function (status, message) {
+		self.tcp.on('status_change', (status, message) => {
             self.status(status, message)
 		})
 
-		self.tcp.on('error', function (err) {
+		self.tcp.on('error', (err) => {
 			self.debug('Network error', err)
             self.status(self.STATE_ERROR, err)
 			self.log('error', 'Network error: ' + err.message)
@@ -55,13 +53,16 @@ exports.tcpClient = function () {
     
         })
 
-		self.tcp.on('connect', function () {
+		self.tcp.on('connect', () => {
 			self.status(self.STATE_OK)
             self.data.startup = false
             self.debug('Connected to panel: ' + host + ':' + port)
             if (self.config.debug == true) {
                 self.log('warn', 'Connected to panel: ' + host + ':' + port)
             }
+
+            self.sendCommand('PanelTopology?') // Ask for the Panel Topology when connected
+
             self.pollAPI = setInterval( () => {
                     self.sendCommand('ping') // Ping the panel
                     // self.sendCommand('list') // Get model and version on connection
@@ -81,11 +82,34 @@ exports.tcpClient = function () {
 			self.sendCommand('encoderPressMode=1') // Enable "Press" response from encoders on the panel
         })
 
-		self.tcp.on('data', function (data) {
-			// self.debug('data: ' + String(data))
-
+        let messageBuffer = ''
+		self.tcp.on('data', (data) => {
             let str_raw = String(data)
             let str = str_raw.trim() // remove new line, carage return and so on.
+            str_1 = str.split('\n')
+
+            // If we recived a Panel topology HWC Layout: 
+            for (let index = 0; index < str_1.length; index++) {
+                messageBuffer += str_1[index]
+                if (messageBuffer.endsWith('}}}')) {
+                    let jsonBuffer = ''
+
+                    messageBuffer
+                        .split('\n')
+                        .filter((message) => message != '')
+                        .forEach((message) => {
+                            if (message.startsWith('_panelTopology_svgbase=') || jsonBuffer.length > 0) {
+                                jsonBuffer += message
+                                if (jsonBuffer.includes('_panelTopology_HWC=') && jsonBuffer.includes('}}}')) {
+                                    self.handleJSON.bind(this)(jsonBuffer)
+                                    jsonBuffer = ''
+                                }
+                            }
+                        })
+
+                    messageBuffer = ''
+                }
+            }
 
             // respond to status messages (not really used when panel is in server mode)
             switch (str) {
@@ -100,15 +124,15 @@ exports.tcpClient = function () {
                 case "ack":
                     self.status(self.STATE_OK)
                     break;
+
                 default:
-                    str = str.split('\n')
-                    for (let index = 0; index < str.length; index++) {
-                        self.debug(str[index])
-                        self.storeData(str[index])                        
+                    str_line = str.split('\n')
+                    for (let index = 0; index < str_line.length; index++) {
+                        // self.debug(str_line[index])
+                        self.storeData(str_line[index])
                     }
                     break;
             }
-
         })
 	}
     return self

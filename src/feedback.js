@@ -45,7 +45,12 @@ exports.setFeedbacks = function (i) {
 			if (String(feedback.options.hwc) == hwc.id) {
 
 				if (hwc.type == 'Button' || hwc.type == '4-way Button') {
-					self.system.emit('bank_pressed', info.page, info.bank, hwc.press)
+					if (hwc.press == 'true' || hwc.press == true) {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+					} else if (hwc.press == 'false' || hwc.press == false) {
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					}
+
 				} 
 
 				else if (hwc.type == 'Encoder' && hwc.press == 'true') {

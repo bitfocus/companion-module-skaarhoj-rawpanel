@@ -4,10 +4,11 @@ const { executeAction, getActions, sendCommand } = require('./actions')
 const { tcpClient } = require('./tcpClient')
 const { satelliteAPI, sendAPI, hwcToSat } = require('./satelliteAPI')
 const { storeData } = require('./storeData')
+const { handleJSON } = require('./json')
 const { bank_invalidate } = require('./getBankColor')
 const { getConfigFields } = require('./config')
 const { setFeedbacks } = require('./feedback')
-// const { updateVariableDefinitions } = require('./variables')
+const { updateVariableDefinitions } = require('./variables')
 // const { initPresets } = require('./presets')
 
 /**
@@ -64,22 +65,26 @@ const { setFeedbacks } = require('./feedback')
 			},
 		}
 
+		this.json_data = {
+			hwc: [],
+			types: []
+		}
 		this.clients = []
 
 		this.config.host = this.config.host || ''
 		this.config.tcpPort = this.config.tcpPort || 9923
-		this.config.debug = this.config.debug || false
 		this.config.timeout = this.config.timeout !== undefined ? this.config.timeout : 5000
 		this.config.refresh = this.config.refresh !== undefined ? this.config.refresh : 30000
 
 		this.storeData = storeData
+		this.handleJSON = handleJSON
 		this.sendCommand = sendCommand
 		this.satelliteAPI = satelliteAPI
 		this.sendAPI = sendAPI
 		this.hwcToSat = hwcToSat
 		this.bank_invalidate = bank_invalidate
 		this.system = system
-		// this.updateVariableDefinitions = updateVariableDefinitions
+		this.updateVariableDefinitions = updateVariableDefinitions
 	}
 
     // Init module
@@ -96,7 +101,7 @@ const { setFeedbacks } = require('./feedback')
 		this.init_feedbacks()
 		tcpClient.bind(this)()
 		// initPresets.bind(this)()
-		// this.updateVariableDefinitions()
+		this.updateVariableDefinitions()
 	}
 
     // New config saved
@@ -104,7 +109,19 @@ const { setFeedbacks } = require('./feedback')
 		this.config = config
 		this.actions()
 		this.init_feedbacks()
+
+		// TODO: change to a get full key config instead at a later point
+		// Remove and reconnect satellite device:
+		self.sendAPI('QUIT')
+		self.data.satConnected = false
+		self.data.startupAPI = true
+		if (self.api !== undefined) {
+			self.api.destroy()
+			delete self.api
+		}
+
 		tcpClient.bind(this)()
+		this.updateVariableDefinitions()
 		// initPresets.bind(this)()
 	}
 
