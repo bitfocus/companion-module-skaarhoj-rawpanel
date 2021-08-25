@@ -102,6 +102,7 @@ exports.tcpClient = function () {
                                 jsonBuffer += message
                                 if (jsonBuffer.includes('_panelTopology_HWC=') && jsonBuffer.includes('}}}')) {
                                     self.handleJSON.bind(this)(jsonBuffer)
+                                    // self.debug(jsonBuffer)
                                     jsonBuffer = ''
                                 }
                             }

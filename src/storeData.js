@@ -184,38 +184,48 @@ exports.storeData = function (str) {
             hwc.type = 'Button LED Update'
         }
 
+        // Find the HWc that got pushed/moved 
+        let json_hwc = {}
+        for (let index = 0; index < this.json_data.hwc.length; index++) {
+            if (this.json_data.hwc[index].id == hwc.id) {
+                json_hwc = this.json_data.hwc[index];
+            } else {
+                continue
+            }
+        }
+
+        this.debug(json_hwc)
         // Update variables for: Faders, Joysticks and Potmeters
-        const type = this.json_data.hwc[hwc.id-1].type
-        if (type !== null) {
-            if (type.in === 'av') {
+        if (json_hwc.type !== null && json_hwc.type !== {}) {
+            if (json_hwc.type.in === 'av') {
                 if (hwc.val !== null) {
-                    this.setVariable(`hwc_${hwc.id}_fader`, hwc.val)
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
                 } else {
-                    this.setVariable(`hwc_${hwc.id}_fader`, '0')
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, '0')
                 }
-            } else if (type.in === 'ah') {
+            } else if (json_hwc.type.in === 'ah') {
                 if (hwc.val !== null) {
-                    this.setVariable(`hwc_${hwc.id}_potentiometer`, hwc.val)
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
                 } else {
-                    this.setVariable(`hwc_${hwc.id}_potentiometer`, '0')
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, '0')
                 }
-            } else if (type.in === 'ar') {
+            } else if (json_hwc.type.in === 'ar') {
                 if (hwc.val !== null) {
-                    this.setVariable(`hwc_${hwc.id}_a_rotation`, hwc.val)
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
                 } else {
-                    this.setVariable(`hwc_${hwc.id}_a_rotation`, '0')
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, '0')
                 }
-            } else if (type.in === 'iv' || hwc.type.in === 'ih') {
+            } else if (json_hwc.type.in === 'iv' || json_hwc.type.in === 'ih') {
                 if (hwc.val !== null) {
-                    this.setVariable(`hwc_${hwc.id}_joystick`, hwc.val)
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
                 } else {
-                    this.setVariable(`hwc_${hwc.id}_joystick`, '0')
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, '0')
                 }
-            } else if (type.in === 'ir') {
+            } else if (json_hwc.type.in === 'ir') {
                 if (hwc.val !== null) {
-                    this.setVariable(`hwc_${hwc.id}_i_rotation`, hwc.val)
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
                 } else {
-                    this.setVariable(`hwc_${hwc.id}_i_rotation`, '0')
+                    this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, '0')
                 }
             }
         }
