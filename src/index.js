@@ -112,12 +112,12 @@ const { updateVariableDefinitions } = require('./variables')
 
 		// TODO: change to a get full key config instead at a later point
 		// Remove and reconnect satellite device:
-		self.sendAPI('QUIT')
-		self.data.satConnected = false
-		self.data.startupAPI = true
-		if (self.api !== undefined) {
-			self.api.destroy()
-			delete self.api
+		this.sendAPI('QUIT')
+		this.data.satConnected = false
+		this.data.startupAPI = true
+		if (this.api !== undefined) {
+			this.api.destroy()
+			delete this.api
 		}
 
 		tcpClient.bind(this)()
