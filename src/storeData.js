@@ -105,6 +105,7 @@ exports.storeData = function (str) {
     // check if we recieved a keypress
     if (str.substring(0, 4) === 'HWC#') {
         str = str.substring(4)
+        this.debug('Recived State: ' + str)
         var hwc = this.data.hwc
         hwc.id = ''
         hwc.type = ''
@@ -194,9 +195,9 @@ exports.storeData = function (str) {
             }
         }
 
-        this.debug(json_hwc)
+        this.debug(json_hwc.type)
         // Update variables for: Faders, Joysticks and Potmeters
-        if (json_hwc.type !== null && json_hwc.type !== {}) {
+        if (json_hwc.type !== null && json_hwc.type !== {} && json_hwc.type !== undefined) {
             if (json_hwc.type.in === 'av') {
                 if (hwc.val !== null) {
                     this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)

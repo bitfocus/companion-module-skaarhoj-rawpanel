@@ -40,13 +40,13 @@ exports.satelliteAPI = function () {
             str_split = str_split.split('\n')
             for (let index = 0; index < str_split.length; index++) {
                 let str = str_split[index]               
-                self.debug(str)
+                // self.debug(str)
 
                 // Create a satallite device on first connect
                 if (str.includes('BEGIN Companion Version=2.2.0') == true) {
                     let s = self.data.model
                     if (s.includes('SK_') == true) { s = s.split('SK_')[1]}
-                    self.sendAPI('ADD-DEVICE DEVICEID=' + self.data.serial + ' PRODUCT_NAME="SKAARHOJ ' + s + '" BITMAPS=false COLORS=true')
+                    self.sendAPI('ADD-DEVICE DEVICEID=' + self.data.serial + ' PRODUCT_NAME="SKAARHOJ ' + s + '" BITMAPS=false COLORS=true TEXT=true')
                     continue
                 }
 
@@ -58,25 +58,28 @@ exports.satelliteAPI = function () {
             
                 // Respond to ping Commands
                 if (str.includes('PING')) {
-                    self.debug('Sat Ping')
+                    self.debug('Sent Ping')
                     continue
                 }
 
                 // Recieved a Brightness Command
                 if (str.includes('BRIGHTNESS')) {
-                    self.debug('Sat Brightnss')
+                    let brightness = (str.split('VALUE=')[1]).split(' ')[0]
+                    brightness = Math.round(self.normalizeBetweenTwoRanges(brightness, 0, 100, 0, 8))
+                    self.debug('Sent Panel Brightnss: ' + brightness)
+                    self.sendCommand('PanelBrightness=' + brightness)
                     continue
                 }
 
                 // Recieved a Clear all Command
                 if (str.includes('KEY-CLEAR')) {
-                    self.debug('Sat Key Clear')
+                    self.debug('Sent Key Clear')
                     continue
                 }
 
                 // recived a Key-State Command
                 if (str.includes('KEY-STATE')) {
-                    self.debug('Sat Key State')
+                    self.debug('Sent Key State')
                     self.debug(str)
 
                     // TODO: Missing handler to clear buttons that was used previosly, but not with a new config
@@ -98,9 +101,6 @@ exports.satelliteAPI = function () {
                         // self.debug(config_key)
                         // self.debug(color)
 
-                        // Send Placeholder Text to the LCD's
-                        self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
-
                         if (rgb == (128 + 64)) {
                             if (self.config.autoDim == true) {
                                 self.sendCommand('HWCc#' + config_key + '=128')
@@ -114,6 +114,52 @@ exports.satelliteAPI = function () {
                         }    
                     }
 
+                    if (str.includes('TEXT=')) {
+                        let data = (str.split('TEXT=')[1]).split(' ')[0]
+                        let buff = new Buffer(data, 'base64');
+                        let cmd = buff.toString('ascii');
+                        // self.debug(cmd)
+                        
+                        // Check if there is a title/text on the button?
+                        if (cmd.length > 0) {
+                            if (cmd.length >= 25) {
+                                x = cmd.split('\\n')
+                                if (x.length >= 3) {
+                                    cmd = cmd.replace(' ', '\\n')
+                                }
+                
+                                if (x.length <= 2) {
+                                    // cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
+                                    y = cmd.match(/.{1,24}/g)
+                                    // console.log(y.length)
+                                    if (y.length <= 2) {
+                                        cmd = y[0] + '\\n' + y[1]
+                                    } else if (y.length >= 3) {
+                                        cmd = y[0] + '\\n' + y[1] + '\\n' + y[2]
+                                    }
+                                }
+                            }
+                
+                            // If the text includes a line break, replace it with a space
+                            if (cmd.includes('\\n')) {
+                                x = cmd.split('\\n')
+                                if (x.length == 2) {
+                                    console.log(x.length)
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+                                } else if (x.length == 3) {
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
+                                } else {
+                                    cmd = cmd.split("\\n").join(" ")
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                                }
+                            } else {
+                                self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                            }
+                        } else {
+                            // Send Placeholder Text to the LCD's if there is no other text
+                            self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
+                        }
+                    }
                     continue
                 }
             }

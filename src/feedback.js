@@ -290,17 +290,23 @@ exports.setFeedbacks = function (i) {
 		callback: function (feedback, bank, info) {
 			var cmd = bank.text
 
+				// Replaces all variables with their selected values
+	
 			// if the title includes a variable, get it's value
 			if (bank.text.includes('$(')) {
-				x = String(bank.text.split('$(')[1]).split(')')[0]
-				var str = x.split(':') // Split instance and variable
-				var selctInstances = str[0]
-				var selctVariable = str[1]
-				var temp
-	
+				// x = String(bank.text.split('$(')[1]).split(')')[0]
+				// var str = x.split(':') // Split instance and variable
+				// var selctInstances = str[0]
+				// var selctVariable = str[1]
+				// var temp
+
 				// Gets the value of the selected value
-				self.system.emit('variable_get', selctInstances, selctVariable, (definitions) => (temp = definitions))
-				cmd = String(bank.text.split('$(')[0]) + temp + String(bank.text.split('$(')[1]).split(')')[1]
+				// self.system.emit('variable_get', selctInstances, selctVariable, (definitions) => (temp = definitions))
+				// cmd = String(bank.text.split('$(')[0]) + temp + String(bank.text.split('$(')[1]).split(')')[1]
+				this.parseVariables(bank.text, (temp) => {
+					cmd = temp
+				})
+	
 			}
 			
 			// If the text is longer that 24 characters split it up in two
@@ -310,10 +316,10 @@ exports.setFeedbacks = function (i) {
 					cmd = cmd.replace(' ', '\\n')
 				}
 
-				if (x.length == 1) {
+				if (x.length <= 2) {
 					// cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
 					y = cmd.match(/.{1,24}/g)
-					console.log(y.length)
+					// console.log(y.length)
 					if (y.length <= 2) {
 						cmd = y[0] + '\\n' + y[1]
 					} else if (y.length >= 3) {
@@ -331,7 +337,7 @@ exports.setFeedbacks = function (i) {
 				} else if (x.length == 3) {
 					self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 				} else {
-					cmd = cmd.replace('\\n', ' ')
+					cmd = cmd.split("\\n").join(" ")
 					self.sendCommand('HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||')
 				}
 			} else {
