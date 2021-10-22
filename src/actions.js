@@ -182,7 +182,6 @@ exports.getActions = function () {
 exports.executeAction = function (action) {
 	var self = this
 	var opt = action.options
-	var conf = self.config
 
 	switch (action.action) {
 		case 'SetButtonState':
