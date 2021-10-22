@@ -62,6 +62,7 @@ exports.tcpClient = function () {
             }
 
             self.sendCommand('PanelTopology?') // Ask for the Panel Topology when connected
+            self.sendCommand('Clear') // Clear old data
 
             self.pollAPI = setInterval( () => {
                     self.sendCommand('ping') // Ping the panel
@@ -72,6 +73,77 @@ exports.tcpClient = function () {
             self.Refresh = setInterval( () => {
                 self.checkFeedbacks('tieToHwcLed')  // Send initial LED data to the panel
                 self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
+
+                // Send stored data to panel if a shit state is changed
+                for (let index = 0; index < this.sdData.keys.length; index++) {
+                    let key = index + 1            
+                    let config_key = self.config['btn_' + key]
+                    let keyData = this.sdData.keys[index]
+
+                    // skip if nothing is selected
+                    if (config_key == 0 || config_key == '') {
+                        continue                        
+                    }
+
+                    if (keyData.color !== "") {
+                        let rgb = keyData.color
+                        if (rgb == (128 + 64)) {
+                            if (self.config.autoDim == true) {
+                                self.sendCommand('HWCc#' + config_key + '=128')
+                                self.sendCommand('HWC#' + config_key + '=5') // Dimmed
+                            } else {
+                                self.sendCommand('HWC#' + config_key + '=0') // OFF
+                            }
+                        } else {
+                            self.sendCommand('HWCc#' + config_key + '=' + rgb)
+                            self.sendCommand('HWC#' + config_key + '=36') // ON
+                        }    
+                    }
+
+                    if (keyData.text !== "") {
+                        cmd = keyData.text
+                        
+                        // Check if there is a title/text on the button?
+                        if (cmd.length > 0) {
+                            if (cmd.length >= 25) {
+                                x = cmd.split('\\n')
+                                if (x.length >= 3) {
+                                    cmd = cmd.replace(' ', '\\n')
+                                }
+                
+                                if (x.length <= 2) {
+                                    // cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
+                                    y = cmd.match(/.{1,24}/g)
+                                    // console.log(y.length)
+                                    if (y.length <= 2) {
+                                        cmd = y[0] + '\\n' + y[1]
+                                    } else if (y.length >= 3) {
+                                        cmd = y[0] + '\\n' + y[1] + '\\n' + y[2]
+                                    }
+                                }
+                            }
+                
+                            // If the text includes a line break, replace it with a space
+                            if (cmd.includes('\\n')) {
+                                x = cmd.split('\\n')
+                                if (x.length == 2) {
+                                    console.log(x.length)
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+                                } else if (x.length == 3) {
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
+                                } else {
+                                    cmd = cmd.split("\\n").join(" ")
+                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                                }
+                            } else {
+                                self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                            }
+                        } else {
+                            // Send Placeholder Text to the LCD's if there is no other text
+                            self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
+                        }
+                    }
+                }
                 },
                 refresh < 100 ? 100 : refresh
             )

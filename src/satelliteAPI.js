@@ -66,8 +66,8 @@ exports.satelliteAPI = function () {
                 if (str.includes('BRIGHTNESS')) {
                     let brightness = (str.split('VALUE=')[1]).split(' ')[0]
                     brightness = Math.round(self.normalizeBetweenTwoRanges(brightness, 0, 100, 0, 8))
-                    self.debug('Sent Panel Brightnss: ' + brightness)
                     self.sendCommand('PanelBrightness=' + brightness)
+                    self.debug('Sent Panel Brightnss: ' + brightness)
                     continue
                 }
 
@@ -81,43 +81,53 @@ exports.satelliteAPI = function () {
                 if (str.includes('KEY-STATE')) {
                     self.debug('Sent Key State')
                     self.debug(str)
+                    keyData = {
+                        text: "",
+                        color: ""
+                    }
 
                     // TODO: Missing handler to clear buttons that was used previosly, but not with a new config
 
                     let key = 1 + parseInt((str.split('KEY=')[1]).split(' ')[0])
-                    let config_key = self.config['btn_' + key]
+                    let config_key = String(self.config['btn_' + key])
+                    let color_key = config_key
+                    let text_key = config_key
 
                     // skip if nothing is selected
                     if (config_key == 0 || config_key == '') {
                         continue                        
                     }
 
+                    if (config_key.includes(',')) {
+                        config_key = config_key.split(',')
+                        color_key = config_key[0]
+                        text_key = config_key[1]
+                    }
+
                     if (str.includes('COLOR=#')) {
                         let rawColor = (str.split('COLOR=#')[1]).split(' ')[0]
                         color = parseInt(rawColor, 16)
                         let rgb = self.convertIntColorToRawPanelColor(color)
-
-                        // self.debug(key)
-                        // self.debug(config_key)
-                        // self.debug(color)
+                        keyData.color = rgb
 
                         if (rgb == (128 + 64)) {
                             if (self.config.autoDim == true) {
-                                self.sendCommand('HWCc#' + config_key + '=128')
-                                self.sendCommand('HWC#' + config_key + '=5') // Dimmed
+                                self.sendCommand('HWCc#' + color_key + '=128')
+                                self.sendCommand('HWC#' + color_key + '=5') // Dimmed
                             } else {
-                                self.sendCommand('HWC#' + config_key + '=0') // OFF
+                                self.sendCommand('HWC#' + color_key + '=0') // OFF
                             }
                         } else {
-                            self.sendCommand('HWCc#' + config_key + '=' + rgb)
-                            self.sendCommand('HWC#' + config_key + '=36') // ON
+                            self.sendCommand('HWCc#' + color_key + '=' + rgb)
+                            self.sendCommand('HWC#' + color_key + '=36') // ON
                         }    
                     }
 
                     if (str.includes('TEXT=')) {
                         let data = (str.split('TEXT=')[1]).split(' ')[0]
-                        let buff = new Buffer(data, 'base64');
+                        let buff = new Buffer.from(data, 'base64');
                         let cmd = buff.toString('ascii');
+                        keyData.text = cmd
                         // self.debug(cmd)
                         
                         // Check if there is a title/text on the button?
@@ -145,21 +155,24 @@ exports.satelliteAPI = function () {
                                 x = cmd.split('\\n')
                                 if (x.length == 2) {
                                     console.log(x.length)
-                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
                                 } else if (x.length == 3) {
-                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
+                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
                                 } else {
                                     cmd = cmd.split("\\n").join(" ")
-                                    self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
                                 }
                             } else {
-                                self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+                                self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
                             }
                         } else {
                             // Send Placeholder Text to the LCD's if there is no other text
-                            self.sendCommand('HWCt#' + config_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
+                            self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
                         }
                     }
+
+                    // Store Streamdeck Button States Internaly:
+                    self.sdData.keys[key - 1] = keyData
                     continue
                 }
             }

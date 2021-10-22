@@ -65,6 +65,9 @@ const { updateVariableDefinitions } = require('./variables')
 			},
 		}
 
+		this.sdData = {
+			keys: []
+		}
 		this.json_data = {
 			hwc: [],
 			types: []
