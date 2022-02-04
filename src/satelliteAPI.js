@@ -96,7 +96,7 @@ exports.satelliteAPI = function () {
                     let text_key = config_key
 
                     // skip if nothing is selected
-                    if (config_key == 0 || config_key == '') {
+                    if (config_key == 0 || config_key == '' || config_key == 'undefined') {
                         continue                        
                     }
 
@@ -221,7 +221,7 @@ exports.hwcToSat = function(message) {
     // IF the HWC ID is 0 return
     if (hwc.id == '0') { return }
 
-    self.debug(hwc)
+    // self.debug(hwc)
 
     // Tackle Encoders, Joysticks and Faders
     if (hwc.type == 'Encoder') {
@@ -242,7 +242,6 @@ exports.hwcToSat = function(message) {
             hwc.press = 'false'
         } 
     } else if (hwc.type == 'Fader') {
-        self.debug(hwc)
         let center = 500
         let deadzone = 200 
         let val = hwc.val-center
@@ -256,7 +255,6 @@ exports.hwcToSat = function(message) {
         else if (val > (deadzone*-1) || val < deadzone) {
             hwc.press = 'false'
         } 
-
     }
 
     // check if it's atleast a press or a release, if not return
