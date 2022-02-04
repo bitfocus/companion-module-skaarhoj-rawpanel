@@ -43,7 +43,7 @@ exports.satelliteAPI = function () {
                 // self.debug(str)
 
                 // Create a satallite device on first connect
-                if (str.includes('BEGIN Companion Version=2.2.0') == true) {
+                if (str.includes('BEGIN CompanionVersion=2.2.0') == true) {
                     let s = self.data.model
                     if (s.includes('SK_') == true) { s = s.split('SK_')[1]}
                     self.sendAPI('ADD-DEVICE DEVICEID=' + self.data.serial + ' PRODUCT_NAME="SKAARHOJ ' + s + '" BITMAPS=false COLORS=true TEXT=true')
@@ -73,6 +73,7 @@ exports.satelliteAPI = function () {
 
                 // Recieved a Clear all Command
                 if (str.includes('KEY-CLEAR')) {
+                    self.sendCommand('Clear')
                     self.debug('Sent Key Clear')
                     continue
                 }
@@ -83,7 +84,8 @@ exports.satelliteAPI = function () {
                     self.debug(str)
                     keyData = {
                         text: "",
-                        color: ""
+                        color: "",
+                        type: ""
                     }
 
                     // TODO: Missing handler to clear buttons that was used previosly, but not with a new config
@@ -104,71 +106,91 @@ exports.satelliteAPI = function () {
                         text_key = config_key[1]
                     }
 
+                    // Store Color Data
                     if (str.includes('COLOR=#')) {
                         let rawColor = (str.split('COLOR=#')[1]).split(' ')[0]
                         color = parseInt(rawColor, 16)
                         let rgb = self.convertIntColorToRawPanelColor(color)
                         keyData.color = rgb
-
-                        if (rgb == (128 + 64)) {
-                            if (self.config.autoDim == true) {
-                                self.sendCommand('HWCc#' + color_key + '=128')
-                                self.sendCommand('HWC#' + color_key + '=5') // Dimmed
-                            } else {
-                                self.sendCommand('HWC#' + color_key + '=0') // OFF
-                            }
-                        } else {
-                            self.sendCommand('HWCc#' + color_key + '=' + rgb)
-                            self.sendCommand('HWC#' + color_key + '=36') // ON
-                        }    
                     }
 
+                    // Store Text Data
                     if (str.includes('TEXT=')) {
                         let data = (str.split('TEXT=')[1]).split(' ')[0]
                         let buff = new Buffer.from(data, 'base64');
                         let cmd = buff.toString('ascii');
                         keyData.text = cmd
                         // self.debug(cmd)
-                        
-                        // Check if there is a title/text on the button?
-                        if (cmd.length > 0) {
-                            if (cmd.length >= 25) {
-                                x = cmd.split('\\n')
-                                if (x.length >= 3) {
-                                    cmd = cmd.replace(' ', '\\n')
-                                }
-                
-                                if (x.length <= 2) {
-                                    // cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
-                                    y = cmd.match(/.{1,24}/g)
-                                    // console.log(y.length)
-                                    if (y.length <= 2) {
-                                        cmd = y[0] + '\\n' + y[1]
-                                    } else if (y.length >= 3) {
-                                        cmd = y[0] + '\\n' + y[1] + '\\n' + y[2]
-                                    }
+                    }
+
+                    // Store Key Type, and override color and text if needed
+                    if (str.includes('TYPE=')) {
+                        let type = (str.split('TYPE=')[1]).split(' ')[0]
+                        keyData.type = type
+                        if (type == 'PAGEUP') {
+                            keyData.text = 'Page Up'
+                        }
+                        if (type == 'PAGEDOWN') {
+                            keyData.text = 'Page Down'
+                        }
+                        if (type == 'PAGENUM') {
+                            keyData.text = 'Page Number'
+                        }
+                    }
+
+                    // Render Button Color
+                    if (keyData.color == (128 + 64)) {
+                        if (self.config.autoDim == true) {
+                            self.sendCommand('HWCc#' + color_key + '=128')
+                            self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                        } else {
+                            self.sendCommand('HWC#' + color_key + '=0') // OFF
+                        }
+                    } else {
+                        self.sendCommand('HWCc#' + color_key + '=' + keyData.color)
+                        self.sendCommand('HWC#' + color_key + '=36') // ON
+                    }    
+
+                    // Render Button Text
+                    let cmd = keyData.text
+                    // Check if there is a title/text on the button?
+                    if (cmd.length > 0) {
+                        if (cmd.length >= 25) {
+                            x = cmd.split('\\n')
+                            if (x.length >= 3) {
+                                cmd = cmd.replace(' ', '\\n')
+                            }
+            
+                            if (x.length <= 2) {
+                                // cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
+                                y = cmd.match(/.{1,24}/g)
+                                // console.log(y.length)
+                                if (y.length <= 2) {
+                                    cmd = y[0] + '\\n' + y[1]
+                                } else if (y.length >= 3) {
+                                    cmd = y[0] + '\\n' + y[1] + '\\n' + y[2]
                                 }
                             }
-                
-                            // If the text includes a line break, replace it with a space
-                            if (cmd.includes('\\n')) {
-                                x = cmd.split('\\n')
-                                if (x.length == 2) {
-                                    console.log(x.length)
-                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
-                                } else if (x.length == 3) {
-                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
-                                } else {
-                                    cmd = cmd.split("\\n").join(" ")
-                                    self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
-                                }
+                        }
+            
+                        // If the text includes a line break, replace it with a space
+                        if (cmd.includes('\\n')) {
+                            x = cmd.split('\\n')
+                            if (x.length == 2) {
+                                console.log(x.length)
+                                self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+                            } else if (x.length == 3) {
+                                self.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
                             } else {
+                                cmd = cmd.split("\\n").join(" ")
                                 self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
                             }
                         } else {
-                            // Send Placeholder Text to the LCD's if there is no other text
-                            self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
+                            self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
                         }
+                    } else {
+                        // Send Placeholder Text to the LCD's if there is no other text
+                        self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
                     }
 
                     // Store Streamdeck Button States Internaly:
@@ -199,7 +221,43 @@ exports.hwcToSat = function(message) {
     // IF the HWC ID is 0 return
     if (hwc.id == '0') { return }
 
-    // self.debug(hwc)
+    self.debug(hwc)
+
+    // Tackle Encoders, Joysticks and Faders
+    if (hwc.type == 'Encoder') {
+        if (hwc.val == -1 || hwc.val == 1) {
+            hwc.press = 'true'
+            hwc.val = ''
+        }
+    } else if (hwc.type == 'Joystick') {
+        let deadzone = 100
+
+        // Press
+        if (hwc.val >= deadzone || hwc.val <= (deadzone*-1)) {
+            hwc.press = 'true'
+        } 
+
+        // Release
+        else if (hwc.val > (deadzone*-1) || hwc.val < deadzone) {
+            hwc.press = 'false'
+        } 
+    } else if (hwc.type == 'Fader') {
+        self.debug(hwc)
+        let center = 500
+        let deadzone = 200 
+        let val = hwc.val-center
+
+        // Press
+        if (val >= deadzone || val <= (deadzone*-1)) {
+            hwc.press = 'true'
+        } 
+
+        // Release
+        else if (val > (deadzone*-1) || val < deadzone) {
+            hwc.press = 'false'
+        } 
+
+    }
 
     // check if it's atleast a press or a release, if not return
     if (hwc.press == '') { return }
