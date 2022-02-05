@@ -4,7 +4,7 @@
 	"api_version": "1.0.0",
 	"description": "SKAARHOJ Raw Panel",
 	"keywords": [
-		"Controler",
+		"Controller",
 		"Unisketch"
 	],
 	"manufacturer": "SKAARHOJ",
@@ -20,7 +20,7 @@
 		"url": "git+https://github.com/bitfocus/companion-module-skaarhoj-rawpanel.git"
 	},
 	"author": "SKAARHOJ ApS <info@skaarhoj.com>",
-	"contributors": "Andreas H. Thomsen <andreas@skaarhoj.com>",
+	"contributors": ["Andreas H. Thomsen <andreas@skaarhoj.com>"],
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/bitfocus/companion-module-skaarhoj-rawpanel/issues"
