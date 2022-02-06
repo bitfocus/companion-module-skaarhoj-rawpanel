@@ -39,7 +39,7 @@ exports.getActions = function () {
 
 	return {
 		SetButtonState: {
-			label: 'Set Button Status On/Off/Dimmed',
+			label: 'Set Button LED Status On/Off/Dimmed',
 			options: [
 				hwc,
 				{

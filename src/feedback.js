@@ -137,29 +137,43 @@ exports.setFeedbacks = function (i) {
 		callback: async function (feedback, bank, info) {
 			var hwc = self.data.hwc
 			if (String(feedback.options.hwc) == hwc.id) {
-				if (hwc.type == 'Encoder') {
+				self.debug(hwc)
+				if (hwc.type == '4-way Button') {
 					x = feedback.options.cmd
 
-					// Press
-					if (x == 'Press' && hwc.press == 'true') {
+					// Pressed
+					if (x == 'Press' && hwc.press == 'true' && hwc.side == '') {
 						self.system.emit('bank_pressed', info.page, info.bank, true)
-						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+					}
+
+					// Release
+					else if (x == 'Press' && hwc.press == 'false' && hwc.side == '') {
 						self.system.emit('bank_pressed', info.page, info.bank, false)
-					} 
+					}
+					
+				} else if (hwc.type == 'Encoder') {
+					x = feedback.options.cmd
 
 					// Left
-					else if (x == 'Left' && hwc.val == -1) {
+					if (x == 'Left' && hwc.val == -1) {
 						self.system.emit('bank_pressed', info.page, info.bank, true)
 						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 						self.system.emit('bank_pressed', info.page, info.bank, false)
 					}
 		
 					// Right
-					else if (x == 'Right' && hwc.val == 1) {
+					if (x == 'Right' && hwc.val == 1) {
 						self.system.emit('bank_pressed', info.page, info.bank, true)
 						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 						self.system.emit('bank_pressed', info.page, info.bank, false)
 					}
+
+					// Press
+					else if (x == 'Press' && hwc.press == 'true') {
+						self.system.emit('bank_pressed', info.page, info.bank, true)
+						await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
+						self.system.emit('bank_pressed', info.page, info.bank, false)
+					} 
 				}
 			}
 		}

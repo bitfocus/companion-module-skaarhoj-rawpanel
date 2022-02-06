@@ -395,8 +395,8 @@ exports.storeData = function (str) {
         this.checkFeedbacks('tieToHwc') // Update Keypress Feedback
         if (self.config.satEnable == true && self.data.satConnected == true) {this.hwcToSat()}
         if (hwc.type == 'Button' || hwc.type == '4-way Button') { this.checkFeedbacks('tieToHwc4Way') } // Update 4-Way Button Feedback
-        if (hwc.type == 'Encoder') { this.checkFeedbacks('tieToHwcEncoder') } // Update Encoder Feedback
-        if (hwc.type == 'Joystick') { this.checkFeedbacks('tieToHwcJoystick') } // Update Encoder Feedback
+        if (hwc.type == 'Encoder' || hwc.type == '4-way Button') { this.checkFeedbacks('tieToHwcEncoder') } // Update Encoder Feedback, depending the Encoder mode it might be reported as a 4-way button
+        if (hwc.type == 'Joystick') { this.checkFeedbacks('tieToHwcJoystick') } // Update Joystick Feedback
         this.updateVariableDefinitions
         var hwc = this.data.hwc
         hwc.id = ''

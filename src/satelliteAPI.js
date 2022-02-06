@@ -210,274 +210,273 @@ exports.sendAPI = async function(message) {
 		} else {
 			this.debug('Socket not connected :(')
 		}
-		await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](50) // 5 mili sec
+		await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 5 mili sec
 	}
 }
 
 exports.hwcToSat = function(message) {
     self = this
-    let hwc = self.data.hwc
+    var x = self.data.hwc
 
     // IF the HWC ID is 0 return
-    if (hwc.id == '0') { return }
+    if (x.id == '0') { return }
 
     // self.debug(hwc)
 
     // Tackle Encoders, Joysticks and Faders
-    if (hwc.type == 'Encoder') {
-        if (hwc.val == -1 || hwc.val == 1) {
-            hwc.press = 'true'
-            hwc.val = ''
+    if (x.type == 'Encoder') {
+        if (x.val == -1 || x.val == 1) {
+            x.press = 'true'
         }
-    } else if (hwc.type == 'Joystick') {
+    } else if (x.type == 'Joystick') {
         let deadzone = 100
 
         // Press
-        if (hwc.val >= deadzone || hwc.val <= (deadzone*-1)) {
-            hwc.press = 'true'
+        if (x.val >= deadzone || x.val <= (deadzone*-1)) {
+            x.press = 'true'
         } 
 
         // Release
-        else if (hwc.val > (deadzone*-1) || hwc.val < deadzone) {
-            hwc.press = 'false'
+        else if (x.val > (deadzone*-1) || x.val < deadzone) {
+            x.press = 'false'
         } 
-    } else if (hwc.type == 'Fader') {
+    } else if (x.type == 'Fader') {
         let center = 500
         let deadzone = 200 
-        let val = hwc.val-center
+        let val = x.val-center
 
         // Press
         if (val >= deadzone || val <= (deadzone*-1)) {
-            hwc.press = 'true'
+            x.press = 'true'
         } 
 
         // Release
         else if (val > (deadzone*-1) || val < deadzone) {
-            hwc.press = 'false'
+            x.press = 'false'
         } 
     }
 
     // check if it's atleast a press or a release, if not return
-    if (hwc.press == '') { return }
+    if (x.press == '') { return }
 
-    switch (hwc.id) {
+    switch (x.id) {
         case String(self.config.btn_1):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=0 PRESSED=' + hwc.press)            
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=0 PRESSED=' + x.press)            
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=0 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_2):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=1 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=1 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=1 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_3):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=2 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=2 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=2 PRESSED=false')
             }
             break;
                 
         case String(self.config.btn_4):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=3 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=3 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=3 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_5):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=4 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=4 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=4 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_6):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=5 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=5 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=5 PRESSED=false')
             }
             break;
         case String(self.config.btn_7):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=6 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=6 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=6 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_8):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=7 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=7 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=7 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_9):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=8 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=8 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=8 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_10):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=9 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=9 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=9 PRESSED=false')
             }
             break;
                         
         case String(self.config.btn_11):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=10 PRESSED=' + hwc.press)            
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=10 PRESSED=' + x.press)            
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=10 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_12):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=11 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=11 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=11 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_13):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=12 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=12 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=12 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_14):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=13 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=13 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=13 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_15):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=14 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=14 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=14 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_16):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=15 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=15 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=15 PRESSED=false')
             }
             break;
         case String(self.config.btn_17):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=16 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=16 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=16 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_18):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=17 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=17 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=17 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_19):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=18 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=18 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=18 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_20):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=19 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=19 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=19 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_21):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=20 PRESSED=' + hwc.press)            
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=20 PRESSED=' + x.press)            
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=20 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_22):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=21 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=21 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=21 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_23):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=22 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=22 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=22 PRESSED=false')
             }
             break;
                 
         case String(self.config.btn_24):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=23 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=23 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=23 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_25):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=24 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=24 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=24 PRESSED=false')
             }
             break;
     
         case String(self.config.btn_26):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=25 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=25 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=25 PRESSED=false')
             }
             break;
         case String(self.config.btn_27):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=26 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=26 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=26 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_28):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=27 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=27 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=27 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_29):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=28 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=28 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=28 PRESSED=false')
             }
             break;
         
         case String(self.config.btn_30):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=29 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=29 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=29 PRESSED=false')
             }
             break;
                     
         case String(self.config.btn_31):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=30 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=30 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=30 PRESSED=false')
             }
             break;
 
         case String(self.config.btn_32):
-            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=31 PRESSED=' + hwc.press)
-            if (hwc.type == 'Encoder') {
+            self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=31 PRESSED=' + x.press)
+            if (x.type == 'Encoder') {
                 self.sendAPI('KEY-PRESS DEVICEID=' + self.data.serial + ' KEY=31 PRESSED=false')
             }
             break;

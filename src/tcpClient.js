@@ -81,7 +81,7 @@ exports.tcpClient = function () {
                     let keyData = this.sdData.keys[index]
 
                     // skip if nothing is selected
-                    if (config_key == 0 || config_key == '') {
+                    if (config_key == 0 || config_key == '' || keyData == undefined) {
                         continue                        
                     }
 
@@ -151,7 +151,7 @@ exports.tcpClient = function () {
             self.sendCommand('list') // Get model and version on connection
 			self.checkFeedbacks('tieToHwcLed')  // Send initial LED data to the panel
 			self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
-			self.sendCommand('encoderPressMode=1') // Enable "Press" response from encoders on the panel
+			self.sendCommand('encoderPressMode=0') // Enable "Press" response from encoders on the panel
         })
 
         let messageBuffer = ''
