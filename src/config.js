@@ -53,7 +53,7 @@ exports.getConfigFields = function () {
 			id: 'satInfo',
 			width: 11,
 			label: 'Companion Satellite API v2.0',
-			value: 'Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID\'s.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:',
+			value: 'Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID\'s. But latched buttons will only have appropriate feedback with these 32 API buttons.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:',
 		},
 		{
 			type: 'text',

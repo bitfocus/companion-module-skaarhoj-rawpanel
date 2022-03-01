@@ -91,6 +91,8 @@ _Quick Note: **"HWC"** stands for "Hardware Component" on a SKAARHOJ panel, and 
 
 If this is enabled, all HWC's with an LED will light a dim white when the button is black in Companion (mimics normal SKAARHOJ behaviour). Turn this off if you want them to turn completely off. (This would be more in line with how Companion does it usually)
 
+This does not affect the "light up" effect that all 32 of these API buttons support. They will light up bright when pressed/latched and light dim or off when not pressed/latched. Just like you will see the yellow bar on the standard streamdeck displays.
+
 ##### 5. TCP Timeout
 
 Usually, just leave this on its default value **"5000"** or 5 seconds, but this is how often the module will ping the panel and provide the max time before a disconnect is discovered. This setting can be set in the range: "1000 -> 300000" or "1 sec -> 5 min"
@@ -151,6 +153,8 @@ And a set of "feedbacks" that allows you to tie the feedback to the SKAARHOJ pan
 
 - **Tie HWC LED To This Button** - Set's the LED on your Controller so it lights up in the same colour as on the Streamdeck Button's background. This includes colour changes from other feedbacks on the button.
 - **Tie HWC LCD/OLED to this Buttons Display** - Sends the button text to the Controller whenever a change is detected. This included changes from other feedbacks on the button.
+
+One thing these feedbacks will **not** do, is give you the status of latched companion buttons that is only supported on the 32 API buttons.
 
 As some might have noticed, there is currently no "feedback" that allows you to tie a fader to a button, but all faders create a variable that can be used in modules that support it.
 

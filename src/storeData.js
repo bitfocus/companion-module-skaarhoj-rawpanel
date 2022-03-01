@@ -101,15 +101,23 @@ exports.storeData = function (str) {
             if (keyData.color !== "") {
                 let rgb = keyData.color
                 if (rgb == (128 + 64)) {
-                    if (self.config.autoDim == true) {
-                        self.sendCommand('HWCc#' + color_key + '=128')
-                        self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                    self.sendCommand('HWCc#' + color_key + '=128')
+                    if (keyData.pressed == true) {
+                        self.sendCommand('HWC#' + color_key + '=36') // ON
                     } else {
-                        self.sendCommand('HWC#' + color_key + '=0') // OFF
+                        if (self.config.autoDim == true) {
+                            self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                        } else {
+                            self.sendCommand('HWC#' + color_key + '=0') // OFF
+                        }    
                     }
                 } else {
-                    self.sendCommand('HWCc#' + color_key + '=' + rgb)
-                    self.sendCommand('HWC#' + color_key + '=36') // ON
+                    self.sendCommand('HWCc#' + color_key + '=' + keyData.color)
+                    if (keyData.pressed == true) {
+                        self.sendCommand('HWC#' + color_key + '=36') // ON
+                    } else {
+                        self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                    }
                 }    
             }
 
@@ -188,15 +196,23 @@ exports.storeData = function (str) {
             if (keyData.color !== "") {
                 let rgb = keyData.color
                 if (rgb == (128 + 64)) {
-                    if (self.config.autoDim == true) {
-                        self.sendCommand('HWCc#' + color_key + '=128')
-                        self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                    self.sendCommand('HWCc#' + color_key + '=128')
+                    if (keyData.pressed == true) {
+                        self.sendCommand('HWC#' + color_key + '=36') // ON
                     } else {
-                        self.sendCommand('HWC#' + color_key + '=0') // OFF
+                        if (self.config.autoDim == true) {
+                            self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                        } else {
+                            self.sendCommand('HWC#' + color_key + '=0') // OFF
+                        }    
                     }
                 } else {
-                    self.sendCommand('HWCc#' + color_key + '=' + rgb)
-                    self.sendCommand('HWC#' + color_key + '=36') // ON
+                    self.sendCommand('HWCc#' + color_key + '=' + keyData.color)
+                    if (keyData.pressed == true) {
+                        self.sendCommand('HWC#' + color_key + '=36') // ON
+                    } else {
+                        self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                    }
                 }    
             }
 

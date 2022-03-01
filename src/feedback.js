@@ -261,7 +261,7 @@ exports.setFeedbacks = function (i) {
 				default: true,
 			},
 		],
-		callback: function (feedback, bank, info) {
+		callback: async function (feedback, bank, info) {
 			let b_color
 			let b_bgcolor
 			var b = self.bank_info[`${info.page}_${info.bank}`]
@@ -269,7 +269,7 @@ exports.setFeedbacks = function (i) {
 				b_color = b.color
 				b_bgcolor = b.bgcolor
 			}
-	
+
 			let color = b_color
 			if (feedback.options.color == 'bg') {
 				color = b_bgcolor
@@ -301,10 +301,10 @@ exports.setFeedbacks = function (i) {
 		label: 'Tie HWC LCD/OLED to this Buttons Display',
 		description: 'Tie a HWC LCD/OLED On The Panel To This Buttons Display',
 		options: [HWC],
-		callback: function (feedback, bank, info) {
+		callback: async function (feedback, bank, info) {
 			var cmd = bank.text
 
-				// Replaces all variables with their selected values
+			// Replaces all variables with their selected values
 	
 			// if the title includes a variable, get it's value
 			if (bank.text.includes('$(')) {

@@ -82,10 +82,12 @@ exports.satelliteAPI = function () {
                 if (str.includes('KEY-STATE')) {
                     self.debug('Sent Key State')
                     self.debug(str)
+                    console.log(str)
                     keyData = {
                         text: "",
                         color: "",
-                        type: ""
+                        type: "",
+                        pressed: false
                     }
 
                     // TODO: Missing handler to clear buttons that was used previosly, but not with a new config
@@ -123,6 +125,16 @@ exports.satelliteAPI = function () {
                         // self.debug(cmd)
                     }
 
+                    if (str.includes('PRESSED=')) {
+                        let data = (str.split('PRESSED=')[1]).split(' ')[0]
+                        if (data == 'true') {
+                            keyData.pressed = true
+                        } else {
+                            keyData.pressed = false
+                        }
+                        // self.debug(data)
+                    }
+
                     // Store Key Type, and override color and text if needed
                     if (str.includes('TYPE=')) {
                         let type = (str.split('TYPE=')[1]).split(' ')[0]
@@ -140,15 +152,23 @@ exports.satelliteAPI = function () {
 
                     // Render Button Color
                     if (keyData.color == (128 + 64)) {
-                        if (self.config.autoDim == true) {
-                            self.sendCommand('HWCc#' + color_key + '=128')
-                            self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                        self.sendCommand('HWCc#' + color_key + '=128')
+                        if (keyData.pressed == true) {
+                            self.sendCommand('HWC#' + color_key + '=36') // ON
                         } else {
-                            self.sendCommand('HWC#' + color_key + '=0') // OFF
+                            if (self.config.autoDim == true) {
+                                self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                            } else {
+                                self.sendCommand('HWC#' + color_key + '=0') // OFF
+                            }    
                         }
                     } else {
                         self.sendCommand('HWCc#' + color_key + '=' + keyData.color)
-                        self.sendCommand('HWC#' + color_key + '=36') // ON
+                        if (keyData.pressed == true) {
+                            self.sendCommand('HWC#' + color_key + '=36') // ON
+                        } else {
+                            self.sendCommand('HWC#' + color_key + '=5') // Dimmed
+                        }
                     }    
 
                     // Render Button Text
