@@ -7,6 +7,10 @@ For info about the module's [license, please look at the License file](https://g
 
 # Path Notes
 
+**V1.0.2**
+ - Updated images to match current Blue Pill Development
+ - Fixed images not loading correctly in the Help.md file
+
 **V1.0.1**
  - Added support for latched buttons with "Companion Satellite API" buttons
 

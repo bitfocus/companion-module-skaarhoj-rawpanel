@@ -13,7 +13,7 @@ The main requirement for this module to connect to a SKAARHOJ panel is to have t
 **Quick Notes:**
 
 - This is a client to the panel, so it need to be in "server mode" for this to work!
-- **"HWC"** stands for "Hardware Component" on a SKAARHOJ panel, and you will see this ID in the WebUI for your controller. This is the unique identifier that all components have, be it a button, encoder, screen, led and so on._
+- **"HWC"** stands for "Hardware Component" on a SKAARHOJ panel, and you will see this ID in the WebUI for your controller. This is the unique identifier that all components have, be it a button, encoder, screen, led and so on.
 
 ---
 
@@ -240,16 +240,20 @@ This should look something like this:
 
 ![Unisketch Core Setup](Images/unisketch-core-setup.png?raw=true 'Unisketch Core Setup')
 
-After adding the device core, go back to "Controller Configuration" and scroll down to the "Raw Panel" core settings. Please set these settings so they match this image:
+After adding the device core, go back to "Controller Configuration" and scroll down to the "Raw Panel" core settings. Please set these settings so they match one of these images, depending on what if you are on what version is presented to you:
 
 ![Unisketch Raw Panel Settings](Images/unisketch-core-settings.png?raw=true 'Unisketch Raw Panel Settings')
+
+![Unisketch Raw Panel Settings Staging](Images/unisketch-core-settings-staging.png?raw=true 'Unisketch Raw Panel Settings Staging')
 
 The necessary settings are:
 
 - "Alternative Port" should be **ticked** and set to **"9923"**
 - Server mode **Needs** to be **ticked**
-- "Encoder Button Action" should also be **ticked**
+- "Encoder Button Action" or "Blue Pill Ready" should also be **ticked**
 - "Display Connection Status" is not requered and can be left **unticked**
+- "Server Mode Lock To IP" allows you only to allow a connection to the panel from the IP specified in the IP setting for the "UniSketch Raw Panel" core. This can be left **unticked**
+- "Server Mode Max Clients" Can be used to limit the number of devices connected to the panel at once. This can be left **untouched**
 
 You have now setup the core and if you were to flash this firmware now, Companion should be able to connect to it. **But** it would not be able to do anything other than system actions with it just yet.
 
@@ -288,15 +292,15 @@ _**Note** if this does not work for you, update the controller to the latest ver
 
 ##### 4. Setup Blue Pill Inside Panel
 
-On a Blue Pill inside panel, go to the panels IP, open the "Packages" tab, and find the package "Ibeam-Hardware".
+On a Blue Pill inside panel, go to the panels IP, open the "Packages" tab, and find the package "Hardware-Manager".
 
-![Ibeam Packages](Images/ibeam-packages.png?raw=true 'Ibeam Packages')
+![System Packages](Images/system-packages.png?raw=true 'System Packages')
 
 Click on the package and you should now see something like this, make sure to use the same settings:
 
-![Ibeam Hardware](Images/ibeam-hardware.png?raw=true 'Ibeam Hardware')
+![Hardware Manager](Images/hardware-manager.png?raw=true 'Hardware Manager')
 
-Settings to look for in the "Ibeam-Hardware" package:
+Settings to look for in the "Hardware-Manager" package:
 
 - Make sure you have the "Listen On Socket" **unticked**
 - And that "Listen On Port" is **ticked**.
