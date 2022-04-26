@@ -60,12 +60,11 @@ This setting does exactly that. It enables the use of the Satellite API in the m
 This will also register a "virtual" streamdeck pr module that has all the standard settings like you are use to with a streamdeck XL.
 
 An example of a panel that has been registered:
-
-![Surfaces List](images/surfaces_list.png?raw=true 'Surfaces List')
+![Surfaces List](Images/surfaces_list.png?raw=true 'Surfaces List')
 
 And an example of the option for the panel:
 
-![Surface Options](images/surfaces_options.png?raw=true 'Surface Options')
+![Surface Options](Images/surfaces_options.png?raw=true 'Surface Options')
 
 As shown, it will have the name of the Controller, as well as use the serial number for the device to ensure that you can use more than one of the same Controller type.
 
@@ -79,7 +78,7 @@ When filling in your HWCs IDs. The Format: **"button_HWC, Screen_HWC"** -> **"1,
 
 Shown in this picture is two different bank's one with a button that has a screen included, and on "bank 2", we have a button that uses a separate screen:
 
-![Bank Setup](images/bank_setup.png?raw=true 'Bank Setup')
+![Bank Setup](Images/bank_setup.png?raw=true 'Bank Setup')
 
 Encoders, joysticks and faders can also be mapped as a button in these fields. Just type in the HWC id for that component, but the use might be a bit limiting in some cases.
 
@@ -169,7 +168,7 @@ All dynamic variables are made in the format:
 
 So as an example, here is a picture of the variables that are created when a Rack Fusion Live is connected to Companion via this module:
 
-![Variables](images/variables.png?raw=true 'Variables')
+![Variables](Images/variables.png?raw=true 'Variables')
 
 Other than the dynamic variables, it also has three static variables that get filled with info from the panel:
 
@@ -229,7 +228,7 @@ Negatives:
 
 If you want to dedicate the whole panel for use with Companion, the simple way is to open the "Online Configurator" for your panel and select the "Blue Pill Mode" config. This will give you the same control as the dedicated Blue Pill mode described below, but you can still specify a static IP if you want to.
 
-![Unisketch Blue Pill Config](images/unisketch-bluepill-config.png?raw=true 'Unisketch Blue Pill Config')
+![Unisketch Blue Pill Config](Images/unisketch-bluepill-config.png?raw=true 'Unisketch Blue Pill Config')
 
 After selecting this config, set up the IP settings you want and flash the new firmware. And wait for the panel to reboot.
 
@@ -239,11 +238,11 @@ Start by opening the "Online Configurator" and selecting the config you want to 
 
 This should look something like this:
 
-![Unisketch Core Setup](images/unisketch-core-setup.png?raw=true 'Unisketch Core Setup')
+![Unisketch Core Setup](Images/unisketch-core-setup.png?raw=true 'Unisketch Core Setup')
 
 After adding the device core, go back to "Controller Configuration" and scroll down to the "Raw Panel" core settings. Please set these settings so they match this image:
 
-![Unisketch Raw Panel Settings](images/unisketch-core-settings.png?raw=true 'Unisketch Raw Panel Settings')
+![Unisketch Raw Panel Settings](Images/unisketch-core-settings.png?raw=true 'Unisketch Raw Panel Settings')
 
 The necessary settings are:
 
@@ -258,7 +257,7 @@ So in order to allow buttons on your panel to be mapped and used inside companio
 
 Here you want to add either delete what is already on the HWC and/or add the action: **"UniSketch Raw Panel: Tie To Remote HWC"** and set the HWC to 0, then it will map the HWC that you have selected, just like this:
 
-![Unisketch Button 1](images/unisketch-button-1.png?raw=true 'Unisketch Button 1')
+![Unisketch Button 1](Images/unisketch-button-1.png?raw=true 'Unisketch Button 1')
 
 _**Note** that this is also where you will see what the actual HWC ID is if you look at the top left of the picture, you will see that this is HWC 1 because of the naming **#1**_
 
@@ -266,7 +265,7 @@ Repeat this process on all the buttons, encoders, joysticks, LED's, displays and
 
 **Last but not least**, remember to check that the core is enabled and click "save" after changing these options. You will notice an IP field beside the enable/disable box. This IP field can be safely ignored as it's not used by the panel while using the core in server mode.
 
-![Unisketch Core Enable](images/unisketch-core-enable.png?raw=true 'Unisketch Core Enable')
+![Unisketch Core Enable](Images/unisketch-core-enable.png?raw=true 'Unisketch Core Enable')
 
 ##### 3. Setup Unisketch Blue Pill Mode
 
@@ -279,7 +278,7 @@ In order to enable or disable "Blue Pill" mode on a Uniskech controller, follow 
 
 Here is an example of how to enable Blue Pill mode:
 
-![Blue Pill Mode](images/blue-pill-mode.gif?raw=true 'Blue Pill Mode')
+![Blue Pill Mode](Images/blue-pill-mode.gif?raw=true 'Blue Pill Mode')
 
 To disable Blue Pill mode again, repeat the process above, and you should now see a white "wave" move across just like the blue one did before.
 
@@ -291,11 +290,11 @@ _**Note** if this does not work for you, update the controller to the latest ver
 
 On a Blue Pill inside panel, go to the panels IP, open the "Packages" tab, and find the package "Ibeam-Hardware".
 
-![Ibeam Packages](images/ibeam-packages.png?raw=true 'Ibeam Packages')
+![Ibeam Packages](Images/ibeam-packages.png?raw=true 'Ibeam Packages')
 
 Click on the package and you should now see something like this, make sure to use the same settings:
 
-![Ibeam Hardware](images/ibeam-hardware.png?raw=true 'Ibeam Hardware')
+![Ibeam Hardware](Images/ibeam-hardware.png?raw=true 'Ibeam Hardware')
 
 Settings to look for in the "Ibeam-Hardware" package:
 
@@ -306,7 +305,7 @@ Settings to look for in the "Ibeam-Hardware" package:
 
 After you have set the settings, click "Save and restart", and go back and open the package "Ibeam-rwp-bridge" and check the settings there against the picture below:
 
-![Ibeam RWP Bridge](images/ibeam-rwp-bridge.png?raw=true 'Ibeam RWP Bridge')
+![Ibeam RWP Bridge](Images/ibeam-rwp-bridge.png?raw=true 'Ibeam RWP Bridge')
 
 Settings to look for in the "Ibeam-rwp-bridge" package:
 
