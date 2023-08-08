@@ -1,7 +1,6 @@
 var { MODELS } = require('./models.js')
 
 exports.getConfigFields = function () {
-	
 	return [
 		{
 			type: 'textinput',
@@ -18,7 +17,7 @@ exports.getConfigFields = function () {
 			default: 9923,
 			regex: this.REGEX_PORT,
 		},
-		// { // TODO: Enable when ofline programming is posible, for use at a later point 
+		// { // TODO: Enable when ofline programming is posible, for use at a later point
 		// 	type: 'text',
 		// 	id: 'modelInfo',
 		// 	width: 12,
@@ -53,13 +52,15 @@ exports.getConfigFields = function () {
 			id: 'satInfo',
 			width: 11,
 			label: 'Companion Satellite API v2.0',
-			value: 'Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID\'s. But latched buttons will only have appropriate feedback with these 32 API buttons.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:',
+			value:
+				"Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID's. But latched buttons will only have appropriate feedback with these 32 API buttons.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:",
 		},
 		{
 			type: 'text',
 			id: 'rowInfo',
 			width: 12,
-			value: '<b>When filling in you HWC id\'s.</b> Format: "button_HWC, Screen_HWC" -> "1,10" if there is only one number screen will be asumed to be on the same HWC',
+			value:
+				'<b>When filling in you HWC id\'s.</b> Format: "button_HWC, Screen_HWC" -> "1,10" if there is only one number screen will be asumed to be on the same HWC',
 		},
 		{
 			type: 'text',
@@ -296,7 +297,8 @@ exports.getConfigFields = function () {
 			id: 'satInfo',
 			width: 11,
 			label: 'LED Feedback, Auto dim or off? (Might need Companion or the module to be restarted)',
-			value: 'If this is enabled, all HWC\'s that has an LED will light a dim white when the button is black in companion (mimics normal SKAARHOJ behaviour). Turn this off if you want them to turn completely off. (This would be more in line with how companion does it usually)',
+			value:
+				"If this is enabled, all HWC's that has an LED will light a dim white when the button is black in companion (mimics normal SKAARHOJ behaviour). Turn this off if you want them to turn completely off. (This would be more in line with how companion does it usually)",
 		},
 		{
 			type: 'number',
@@ -305,7 +307,7 @@ exports.getConfigFields = function () {
 			width: 12,
 			default: 5000,
 			min: 1000,
-			max: 300000
+			max: 300000,
 		},
 		{
 			type: 'number',
@@ -314,7 +316,7 @@ exports.getConfigFields = function () {
 			width: 12,
 			default: 30000,
 			min: 5000,
-			max: 600000
+			max: 600000,
 		},
 		{
 			type: 'checkbox',

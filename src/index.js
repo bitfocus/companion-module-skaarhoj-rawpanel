@@ -14,8 +14,7 @@ const { updateVariableDefinitions } = require('./variables')
 /**
  * Companion instance class for SKAARHOJ Raw Panel
  */
- class RawPanelInstance extends instance_skel {
-
+class RawPanelInstance extends instance_skel {
 	constructor(system, id, config) {
 		super(system, id, config)
 
@@ -28,21 +27,21 @@ const { updateVariableDefinitions } = require('./variables')
 			serial: 'NaN',
 			version: 'Nan',
 			sleep: 'False',
-			state : {
+			state: {
 				Master: 0,
 				P: 0,
 				Q: 0,
 				R: 0,
 				S: 0,
 			},
-			shift : {
+			shift: {
 				Master: 0,
 				A: 0,
 				B: 0,
 				C: 0,
 				D: 0,
 			},
-			mem : {
+			mem: {
 				A: 0,
 				B: 0,
 				C: 0,
@@ -66,11 +65,11 @@ const { updateVariableDefinitions } = require('./variables')
 		}
 
 		this.sdData = {
-			keys: []
+			keys: [],
 		}
 		this.json_data = {
 			hwc: [],
-			types: []
+			types: [],
 		}
 		this.clients = []
 
@@ -90,7 +89,7 @@ const { updateVariableDefinitions } = require('./variables')
 		this.updateVariableDefinitions = updateVariableDefinitions
 	}
 
-    // Init module
+	// Init module
 	init() {
 		this.callbacks = {}
 		this.pages = {}
@@ -107,7 +106,7 @@ const { updateVariableDefinitions } = require('./variables')
 		this.updateVariableDefinitions()
 	}
 
-    // New config saved
+	// New config saved
 	updateConfig(config) {
 		this.config = config
 		this.actions()
@@ -128,7 +127,7 @@ const { updateVariableDefinitions } = require('./variables')
 		// initPresets.bind(this)()
 	}
 
-    // Set config page fields
+	// Set config page fields
 	config_fields() {
 		return getConfigFields.bind(this)()
 	}
@@ -169,8 +168,8 @@ const { updateVariableDefinitions } = require('./variables')
 	 * @returns { Number } the normalized value.
 	 */
 	normalizeBetweenTwoRanges(val, minVal, maxVal, newMin, newMax) {
-		return newMin + (val - minVal) * (newMax - newMin) / (maxVal - minVal)
-	};
+		return newMin + ((val - minVal) * (newMax - newMin)) / (maxVal - minVal)
+	}
 
 	convertIntColorToRawPanelColor(color) {
 		var simpelColor = this.rgbRev(parseInt(color))
@@ -178,26 +177,26 @@ const { updateVariableDefinitions } = require('./variables')
 		let g = this.normalizeBetweenTwoRanges(simpelColor.g, 0, 255, 0, 3) << 2
 		let b = this.normalizeBetweenTwoRanges(simpelColor.b, 0, 255, 0, 3)
 		// this.debug((((r | g | b) + 128 + 64)).toString(2))
-		return ((r | g | b) + 128 + 64)
+		return (r | g | b) + 128 + 64
 	}
 
 	addSystemCallback = function (name, cb) {
 		var self = this
-	
+
 		if (self.callbacks[name] === undefined) {
 			self.callbacks[name] = cb.bind(self)
 			self.system.on(name, cb)
 		}
 	}
-	
+
 	banks_getall = function () {
 		var self = this
 
 		system.emit('db_get', 'bank', function (banks) {
 			self.banks = banks
-	
+
 			const new_values = {}
-	
+
 			for (var p in banks) {
 				for (var b in banks[p]) {
 					var tb = banks[p][b]
@@ -207,9 +206,9 @@ const { updateVariableDefinitions } = require('./variables')
 						// need a copy, not a reference
 						self.bank_info[k] = JSON.parse(JSON.stringify(tb))
 						new_values[v] = self.bank_info[k].text = self.check_var_recursion(v, tb.text)
-						self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
+						self.checkFeedbacks('tieToLcd') // Send initial LCD data to the panel
 					} else {
-						self.checkFeedbacks('tieToLcd')     // Send initial LCD data to the panel
+						self.checkFeedbacks('tieToLcd') // Send initial LCD data to the panel
 						new_values[v] = undefined
 					}
 				}
@@ -218,19 +217,19 @@ const { updateVariableDefinitions } = require('./variables')
 			// self.setVariables(new_values)
 		})
 	}
-	
+
 	pages_getall = function () {
 		var self = this
-	
+
 		self.system.emit('get_page', function (pages) {
 			self.pages = pages
 		})
 	}
-	
+
 	check_var_recursion = function (v, realText) {
 		var self = this
 		var newText
-	
+
 		if (realText) {
 			if (realText.includes(v)) {
 				// recursion error:
@@ -244,12 +243,12 @@ const { updateVariableDefinitions } = require('./variables')
 		}
 		return newText
 	}
-	
+
 	// ##########################
 	// #### Instance Actions ####
 	// ##########################
 
-    // Set available actions
+	// Set available actions
 	actions() {
 		this.system.emit('instance_actions', this.id, getActions.bind(this)())
 	}
