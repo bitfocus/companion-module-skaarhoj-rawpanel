@@ -7,6 +7,9 @@ For info about the module's [license, please look at the License file](https://g
 
 # Path Notes
 
+**V1.0.3**
+ - Bug fix: Fix version locked to only work with Companion V2.2.0, now works with all version of companion 2.X.X
+
 **V1.0.2**
  - Updated images to match current Blue Pill Development
  - Fixed images not loading correctly in the Help.md file
