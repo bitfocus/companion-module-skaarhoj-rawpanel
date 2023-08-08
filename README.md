@@ -7,6 +7,10 @@ For info about the module's [license, please look at the License file](https://g
 
 # Path Notes
 
+**V2.0.0**
+ - Compatibility with Companion v3.x
+ - Removes most features other than the Satelite connection on Companion 3.x
+
 **V1.0.3**
  - Bug fix: Fix version locked to only work with Companion V2.2.0, now works with all version of companion 2.X.X
 

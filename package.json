@@ -1,32 +1,24 @@
 {
-  "name": "skaarhoj-rawpanel",
-	"version": "1.0.3",
-	"api_version": "1.0.0",
-	"description": "SKAARHOJ Raw Panel",
-	"keywords": [
-		"Controller",
-		"Unisketch"
-	],
-	"manufacturer": "SKAARHOJ",
-	"product": "Raw Panel",
-	"shortname": "Raw Panel",
-	"homepage": "https://github.com/bitfocus/companion-module-skaarhoj-rawpanel#readme",
+	"name": "skaarhoj-rawpanel",
+	"version": "2.0.0",
 	"main": "src/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
+	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-skaarhoj-rawpanel.git"
 	},
-	"author": "SKAARHOJ ApS <info@skaarhoj.com>",
-	"contributors": ["Andreas H. Thomsen <andreas@skaarhoj.com>"],
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-skaarhoj-rawpanel/issues"
-	},
 	"dependencies": {
+		"18": "^0.0.0",
+		"@companion-module/base": "~1.4.1",
 		"got": "^12.0.1",
-		"lodash": "^4.17.21"
-	}
+		"lodash": "^4.17.21",
+		"node": "^20.5.0"
+	},
+	"devDependencies": {
+		"@companion-module/tools": "^1.3.1"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json"
 }
