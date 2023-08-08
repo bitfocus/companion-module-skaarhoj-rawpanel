@@ -43,7 +43,7 @@ exports.satelliteAPI = function () {
                 // self.debug(str)
 
                 // Create a satallite device on first connect
-                if (str.includes('BEGIN CompanionVersion=2.2.0') == true) {
+                if (str.includes('BEGIN CompanionVersion=') == true) {
                     let s = self.data.model
                     if (s.includes('SK_') == true) { s = s.split('SK_')[1]}
                     self.sendAPI('ADD-DEVICE DEVICEID=' + self.data.serial + ' PRODUCT_NAME="SKAARHOJ ' + s + '" BITMAPS=false COLORS=true TEXT=true')
