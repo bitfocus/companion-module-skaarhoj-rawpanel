@@ -8,19 +8,23 @@ For info about the module's [license, please look at the License file](https://g
 # Path Notes
 
 **V2.0.0**
- - Compatibility with Companion v3.x
- - Removes most features other than the Satelite connection on Companion 3.x
+
+- Compatibility with Companion v3.x
+- Removes most features other than the Satelite connection on Companion 3.x
 
 **V1.0.3**
- - Bug fix: Fix version locked to only work with Companion V2.2.0, now works with all version of companion 2.X.X
+
+- Bug fix: Fix version locked to only work with Companion V2.2.0, now works with all version of companion 2.X.X
 
 **V1.0.2**
- - Updated images to match current Blue Pill Development
- - Fixed images not loading correctly in the Help.md file
+
+- Updated images to match current Blue Pill Development
+- Fixed images not loading correctly in the Help.md file
 
 **V1.0.1**
- - Added support for latched buttons with "Companion Satellite API" buttons
+
+- Added support for latched buttons with "Companion Satellite API" buttons
 
 **V1.0.0**
- - Initial Release
- 
+
+- Initial Release

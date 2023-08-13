@@ -1,38 +1,30 @@
 {
-    "id": "skaarhoj-rawpanel",
-    "name": "skaarhoj-rawpanel",
-    "shortname": "Raw Panel",
-    "description": "SKAARHOJ Raw Panel",
-    "version": "0.0.0",
-    "license": "MIT",
-    "repository": "git+https://github.com/bitfocus/companion-module-skaarhoj-rawpanel.git",
-    "bugs": "https://github.com/bitfocus/companion-module-skaarhoj-rawpanel/issues",
-    "maintainers": [
-        {
-            "name": "SKAARHOJ ApS",
-            "email": "info@skaarhoj.com"
-        },
-        {
-            "name": "Andreas H. Thomsen",
-            "email": "andreas@skaarhoj.com"
-        }
-    ],
-    "legacyIds": [
-        "skaarhoj-rawpanel"
-    ],
-    "runtime": {
-        "type": "node18",
-        "api": "nodejs-ipc",
-        "apiVersion": "0.0.0",
-        "entrypoint": "src/index.js"
-    },
-    "manufacturer": "SKAARHOJ",
-    "products": [
-        "Raw Panel"
-    ],
-    "keywords": [
-        "Controller",
-        "Unisketch",
-        "Bluepill"
-    ]
+	"id": "skaarhoj-rawpanel",
+	"name": "skaarhoj-rawpanel",
+	"shortname": "Raw Panel",
+	"description": "SKAARHOJ Raw Panel",
+	"version": "1.0.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-skaarhoj-rawpanel.git",
+	"bugs": "https://github.com/bitfocus/companion-module-skaarhoj-rawpanel/issues",
+	"maintainers": [
+		{
+			"name": "SKAARHOJ ApS",
+			"email": "info@skaarhoj.com"
+		},
+		{
+			"name": "Andreas H. Thomsen",
+			"email": "andreas@skaarhoj.com"
+		}
+	],
+	"legacyIds": [],
+	"runtime": {
+		"type": "node18",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../src3/index.js"
+	},
+	"manufacturer": "SKAARHOJ",
+	"products": ["Raw Panel"],
+	"keywords": ["Controller", "Unisketch", "Bluepill"]
 }
