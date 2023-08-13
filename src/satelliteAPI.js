@@ -50,7 +50,7 @@ exports.satelliteAPI = function () {
 		})
 
 		self.api.on('data', function (data) {
-			self.debug('data: ' + String(data))
+			// self.debug('data: ' + String(data))
 
 			let str_raw = String(data)
 			let str_split = str_raw.trim() // remove new line, carage return and so on.
@@ -58,7 +58,7 @@ exports.satelliteAPI = function () {
 			str_split = str_split.split('\n')
 			for (let index = 0; index < str_split.length; index++) {
 				let str = str_split[index]
-				self.debug(str)
+				// self.debug(str)
 
 				// Create a satallite device on first connect
 				if (str.includes('BEGIN CompanionVersion=') == true) {
