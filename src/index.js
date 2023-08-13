@@ -154,6 +154,10 @@ const { updateVariableDefinitions } = require('./variables')
 			clearInterval(this.Refresh)
 		}
 
+		if (this.pingSatellite) {
+			clearInterval(this.pingSatellite)
+		}
+
 		this.debug('destroy', this.id)
 	}
 

@@ -199,7 +199,7 @@ exports.executeAction = function (action) {
 			if (opt.label2 != '') {
 				label2 = '|' + opt.label2 + '|'
 			}
-			this.sendCommand('HWCt#' + opt.hwc + '=' + '|||' +  opt.title + isLabel + opt.label1 + label2)
+			this.sendCommand('HWCt#' + opt.hwc + '=' + '|||' + opt.title + isLabel + opt.label1 + label2)
 			break
 		case 'Clear':
 			if (opt.cmd == 'onlyDisplay') {
@@ -210,13 +210,13 @@ exports.executeAction = function (action) {
 			break
 		case 'PanelBrightness':
 			this.sendCommand('PanelBrightness=' + opt.led + ',' + opt.lcd)
-			break	
+			break
 		case 'Reboot':
 			this.sendCommand('Reboot')
 			break
 		case 'Refresh':
 			if (opt.clear) {
-				this.sendCommand('Clear')				
+				this.sendCommand('Clear')
 			}
 
 			// Check feedback, and send state to those
@@ -225,7 +225,7 @@ exports.executeAction = function (action) {
 
 			// Send stored data to panel if a shit state is changed
 			for (let index = 0; index < this.sdData.keys.length; index++) {
-				let key = index + 1            
+				let key = index + 1
 				let config_key = String(self.config['btn_' + key])
 				let color_key = config_key
 				let text_key = config_key
@@ -233,7 +233,7 @@ exports.executeAction = function (action) {
 
 				// skip if nothing is selected
 				if (config_key == 0 || config_key == '') {
-					continue                        
+					continue
 				}
 
 				if (config_key.includes(',')) {
@@ -241,10 +241,10 @@ exports.executeAction = function (action) {
 					color_key = config_key[0]
 					text_key = config_key[1]
 				}
-	
-				if (keyData.color !== "") {
+
+				if (keyData.color !== '') {
 					let rgb = keyData.color
-					if (rgb == (128 + 64)) {
+					if (rgb == 128 + 64) {
 						if (self.config.autoDim == true) {
 							self.sendCommand('HWCc#' + color_key + '=128')
 							self.sendCommand('HWC#' + color_key + '=5') // Dimmed
@@ -254,12 +254,12 @@ exports.executeAction = function (action) {
 					} else {
 						self.sendCommand('HWCc#' + color_key + '=' + rgb)
 						self.sendCommand('HWC#' + color_key + '=36') // ON
-					}    
+					}
 				}
 
-				if (keyData.text !== "") {
+				if (keyData.text !== '') {
 					cmd = keyData.text
-					
+
 					// Check if there is a title/text on the button?
 					if (cmd.length > 0) {
 						if (cmd.length >= 25) {
@@ -267,7 +267,7 @@ exports.executeAction = function (action) {
 							if (x.length >= 3) {
 								cmd = cmd.replace(' ', '\\n')
 							}
-			
+
 							if (x.length <= 2) {
 								// cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
 								y = cmd.match(/.{1,24}/g)
@@ -279,17 +279,19 @@ exports.executeAction = function (action) {
 								}
 							}
 						}
-			
+
 						// If the text includes a line break, replace it with a space
 						if (cmd.includes('\\n')) {
 							x = cmd.split('\\n')
 							if (x.length == 2) {
-								console.log(x.length)
-								self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+								// console.log(x.length)
+								self.sendCommand(
+									'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
+								)
 							} else if (x.length == 3) {
 								self.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 							} else {
-								cmd = cmd.split("\\n").join(" ")
+								cmd = cmd.split('\\n').join(' ')
 								self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
 							}
 						} else {
@@ -297,24 +299,24 @@ exports.executeAction = function (action) {
 						}
 					} else {
 						// Send Placeholder Text to the LCD's if there is no other text
-						self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key +'||')
+						self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
 					}
 				}
 			}
 			break
-	
+
 		default: // all actions, not mentioned above
 			this.sendCommand(opt.cmd)
 			break
 	}
-
 }
 
-exports.sendCommand = async function(message) {
+exports.sendCommand = async function (message) {
 	if (message !== undefined) {
-
 		// this.debug('sending', message, 'to', this.config.host)
-		if (this.config.debug) {this.log('info','Sending: ' + message)}
+		if (this.config.debug) {
+			this.log('info', 'Sending TCP: ' + message)
+		}
 
 		if (this.tcp !== undefined && this.tcp.connected) {
 			this.tcp.send(message + '\n')
