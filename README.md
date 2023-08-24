@@ -5,12 +5,19 @@ For more info on how to use the module, please take a look at the file [help.md]
 
 For info about the module's [license, please look at the License file](https://github.com/bitfocus/companion-module-skaarhoj-rawpanel/blob/main/LICENSE)
 
+Things to fix:
+ - Add support for encoders on one hwc, same way as it's used on the StreamDeck+
+ - Look into adding feedback functions back or the same functionality in another way
+
 # Path Notes
 
 **V2.0.0**
 
-- Compatibility with Companion v3.x
-- Removes most features other than the Satelite connection on Companion 3.x
+- Ported module to Companion v3.x
+- Added Satellite connection support on Companion 3.x
+- Added Actions support on Companion 3.x
+- Added Variable support on Companion 3.x
+- Old Feedbacks setups from Companion 2.x are currently not supported
 
 **V1.0.3**
 

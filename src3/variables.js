@@ -1,19 +1,19 @@
-module.exports = async function (self) {
+exports.UpdateVariableDefinitions = async function (self) {
 	const variables = []
 
 	variables.push({
-		label: `Device Model`,
-		name: `model`,
+		name: `Device Model`,
+		variableId: `model`,
 	})
 
 	variables.push({
-		label: `Serial NR.`,
-		name: `serial_nr`,
+		name: `Serial NR.`,
+		variableId: `serial_nr`,
 	})
 
 	variables.push({
-		label: `Firmware Version`,
-		name: `version`,
+		name: `Firmware Version`,
+		variableId: `version`,
 	})
 
 	// Detect Faders, Joysticks and Potmeters, and generate variables for them
@@ -21,28 +21,28 @@ module.exports = async function (self) {
 		if (hwc.type.in !== null) {
 			if (hwc.type.in === 'av') {
 				variables.push({
-					label: `Hwc: ${hwc.id} - ${hwc.txt}`,
-					name: `Hwc_${hwc.id}_${hwc.txt}`,
+					name: `Hwc: ${hwc.id} - ${hwc.txt}`,
+					variableId: `Hwc_${hwc.id}`,
 				})
 			} else if (hwc.type.in === 'ah') {
 				variables.push({
-					label: `Hwc: ${hwc.id} - ${hwc.txt}`,
-					name: `Hwc_${hwc.id}_${hwc.txt}`,
+					name: `Hwc: ${hwc.id} - ${hwc.txt}`,
+					variableId: `Hwc_${hwc.id}`,
 				})
 			} else if (hwc.type.in === 'ar') {
 				variables.push({
-					label: `Hwc: ${hwc.id} - ${hwc.txt}`,
-					name: `Hwc_${hwc.id}_${hwc.txt}`,
+					name: `Hwc: ${hwc.id} - ${hwc.txt}`,
+					variableId: `Hwc_${hwc.id}`,
 				})
 			} else if (hwc.type.in === 'iv' || hwc.type.in === 'ih') {
 				variables.push({
-					label: `Hwc: ${hwc.id} - ${hwc.txt}`,
-					name: `Hwc_${hwc.id}_${hwc.txt}`,
+					name: `Hwc: ${hwc.id} - ${hwc.txt}`,
+					variableId: `Hwc_${hwc.id}`,
 				})
 			} else if (hwc.type.in === 'ir') {
 				variables.push({
-					label: `Hwc: ${hwc.id} - ${hwc.txt}`,
-					name: `Hwc_${hwc.id}_${hwc.txt}`,
+					name: `Hwc: ${hwc.id} - ${hwc.txt}`,
+					variableId: `Hwc_${hwc.id}`,
 				})
 			}
 		}

@@ -15,7 +15,7 @@ exports.ConfigFields = [
 		regex: this.REGEX_PORT,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'dummy1',
 		width: 12,
 		label: ' ',
@@ -29,7 +29,7 @@ exports.ConfigFields = [
 		default: true,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'satInfo',
 		width: 11,
 		label: 'Companion Satellite API v2.0',
@@ -37,14 +37,14 @@ exports.ConfigFields = [
 			"Enabling the satellite API, you will gain access to all 32 buttons, just like with the normal streamdeck. It even supports going to different pages and so on. <b>BUT</b> you will only get 32 buttons in total that work like this. You can still add other buttons manually by attaching the feedbacks to specific controls and giving them the appropriate HWC ID's. But latched buttons will only have appropriate feedback with these 32 API buttons.<br/> To Use these 32 buttons. Please type what <b>HWC ID</b> you want to tie to each button below:",
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'rowInfo',
 		width: 12,
 		value:
 			'<b>When filling in you HWC id\'s.</b> Format: "button_HWC, Screen_HWC" -> "1,10" if there is only one number screen will be asumed to be on the same HWC',
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'rowInfo1',
 		width: 12,
 		value: '<b>Streamdeck Row 1,</b> Bank 1 - 8',
@@ -98,7 +98,7 @@ exports.ConfigFields = [
 		width: 3,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'rowInfo1',
 		width: 12,
 		value: '<b>Streamdeck Row 2,</b> Bank 9 - 16',
@@ -152,7 +152,7 @@ exports.ConfigFields = [
 		width: 3,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'rowInfo1',
 		width: 12,
 		value: '<b>Streamdeck Row 3,</b> Bank 17 - 24',
@@ -206,7 +206,7 @@ exports.ConfigFields = [
 		width: 3,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'rowInfo1',
 		width: 12,
 		value: '<b>Streamdeck Row 4,</b> Bank 25 - 32',
@@ -260,7 +260,7 @@ exports.ConfigFields = [
 		width: 3,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'dummy2',
 		width: 12,
 		label: ' ',
@@ -274,7 +274,7 @@ exports.ConfigFields = [
 		default: true,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'satInfo',
 		width: 11,
 		label: 'LED Feedback, Auto dim or off? (Might need Companion or the module to be restarted)',
@@ -307,7 +307,7 @@ exports.ConfigFields = [
 		default: false,
 	},
 	{
-		type: 'text',
+		type: "static-text",
 		id: 'debugInfo',
 		width: 11,
 		label: 'Enable Debug To Log Window',
