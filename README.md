@@ -11,6 +11,9 @@ Things to fix:
 
 # Path Notes
 
+**V2.0.1**
+ - Fix Compile Issues
+
 **V2.0.0**
 
 - Ported module to Companion v3.x
