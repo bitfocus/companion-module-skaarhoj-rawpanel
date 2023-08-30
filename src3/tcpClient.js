@@ -1,5 +1,4 @@
 const { InstanceStatus } = require('@companion-module/base')
-const { raw } = require('express')
 
 exports.tcpClient = function () {
 	var self = this

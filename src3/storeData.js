@@ -1,6 +1,3 @@
-const { json } = require('express')
-const { keyBy } = require('lodash')
-
 exports.storeData = function (str) {
 	data = this.data
 

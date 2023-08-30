@@ -1,4 +1,3 @@
-const { raw } = require('express')
 const { storeData } = require('./storeData')
 
 exports.satelliteAPI = function () {
