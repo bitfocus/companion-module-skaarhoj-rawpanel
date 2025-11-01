@@ -82,18 +82,18 @@ exports.tcpClient = function () {
 						let config_key = String(self.config['btn_' + key])
 						let color_key = config_key
 						let text_key = config_key
-	
+
 						// skip if nothing is selected
 						if (config_key == 0 || config_key == '' || config_key == 'undefined') {
 							continue
 						}
-	
+
 						if (config_key.includes(',')) {
 							config_key = config_key.split(',')
 							color_key = config_key[0]
 							text_key = config_key[1]
 						}
-	
+
 						let keyData = this.sdData.keys[index]
 
 						// skip if nothing is selected

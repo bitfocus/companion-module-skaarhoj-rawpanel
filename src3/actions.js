@@ -310,7 +310,9 @@ exports.executeAction = function (action) {
 						if (cmd.includes('\\n')) {
 							x = cmd.split('\\n')
 							if (x.length == 2) {
-								this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+								this.sendCommand(
+									'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
+								)
 							} else if (x.length == 3) {
 								this.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 							} else {
@@ -329,7 +331,7 @@ exports.executeAction = function (action) {
 			break
 
 		default: // all actions, not mentioned above
-		this.sendCommand(opt.cmd)
+			this.sendCommand(opt.cmd)
 			break
 	}
 }

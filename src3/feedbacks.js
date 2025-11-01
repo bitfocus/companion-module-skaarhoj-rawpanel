@@ -1,5 +1,4 @@
 exports.UpdateFeedbacks = async function (self) {
-
 	// const buttonColor = [
 	// 	{ id: '128', label: 'Default Color' },
 	// 	{ id: '129', label: 'OFF' },
@@ -90,17 +89,14 @@ exports.UpdateFeedbacks = async function (self) {
 				// if (String(feedback.options.hwc) == hwc.id) {
 				// 	if (hwc.type == 'Button' || hwc.type == '4-way Button') {
 				// 		x = feedback.options.cmd
-
 				// 		// Release Press
 				// 		if (hwc.press == 'false') {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, false)
 				// 		}
-
 				// 		// ON Any Edge = Press
 				// 		else if (x == 'All') {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 		}
-
 				// 		// Only on Top or Botton or Left or Rigt Edge
 				// 		else if (x == hwc.side) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
@@ -108,7 +104,6 @@ exports.UpdateFeedbacks = async function (self) {
 				// 	}
 				// }
 			},
-
 		},
 		tieToHwcEncoder: {
 			name: 'Encoder - Tie HWC To This Button',
@@ -134,33 +129,28 @@ exports.UpdateFeedbacks = async function (self) {
 				// 	self.log('debug', hwc)
 				// 	if (hwc.type == '4-way Button') {
 				// 		x = feedback.options.cmd
-
 				// 		// Pressed
 				// 		if (x == 'Press' && hwc.press == 'true' && hwc.side == '') {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 		}
-
 				// 		// Release
 				// 		else if (x == 'Press' && hwc.press == 'false' && hwc.side == '') {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, false)
 				// 		}
 				// 	} else if (hwc.type == 'Encoder') {
 				// 		x = feedback.options.cmd
-
 				// 		// Left
 				// 		if (x == 'Left' && hwc.val == -1) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 			await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 				// 			self.system.emit('bank_pressed', info.page, info.bank, false)
 				// 		}
-
 				// 		// Right
 				// 		if (x == 'Right' && hwc.val == 1) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 			await setTimeout[Object.getOwnPropertySymbols(setTimeout)[0]](100) // 50 mili sec
 				// 			self.system.emit('bank_pressed', info.page, info.bank, false)
 				// 		}
-
 				// 		// Press
 				// 		else if (x == 'Press' && hwc.press == 'true') {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
@@ -203,22 +193,18 @@ exports.UpdateFeedbacks = async function (self) {
 				// 	if (hwc.type == 'Joystick') {
 				// 		x = feedback.options.cmd
 				// 		d = feedback.options.deadzone
-
 				// 		// Both
 				// 		if (x == 'Both' && (hwc.val >= d || hwc.val <= d * -1)) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 		}
-
 				// 		// Up
 				// 		else if (x == 'Up' && hwc.val >= d) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 		}
-
 				// 		// Down
 				// 		else if (x == 'Down' && hwc.val <= d * -1) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, true)
 				// 		}
-
 				// 		// Release
 				// 		else if (hwc.val > d * -1 || hwc.val < d) {
 				// 			self.system.emit('bank_pressed', info.page, info.bank, false)
@@ -264,15 +250,12 @@ exports.UpdateFeedbacks = async function (self) {
 				// 	b_color = b.color
 				// 	b_bgcolor = b.bgcolor
 				// }
-
 				// let color = b_color
 				// if (feedback.options.color == 'bg') {
 				// 	color = b_bgcolor
 				// }
-
 				// // convert color
 				// let rgb = self.convertIntColorToRawPanelColor(color)
-
 				// // console.log(self)
 				// // Send button BG/FG color to remote HWC LED
 				// if (feedback.options.autoOnOff == true) {
@@ -299,9 +282,7 @@ exports.UpdateFeedbacks = async function (self) {
 			options: [HWC],
 			callback: function (feedback, bank, info) {
 				// var cmd = bank.text
-
 				// // Replaces all variables with their selected values
-
 				// // if the title includes a variable, get it's value
 				// if (bank.text.includes('$(')) {
 				// 	// x = String(bank.text.split('$(')[1]).split(')')[0]
@@ -309,7 +290,6 @@ exports.UpdateFeedbacks = async function (self) {
 				// 	// var selctInstances = str[0]
 				// 	// var selctVariable = str[1]
 				// 	// var temp
-
 				// 	// Gets the value of the selected value
 				// 	// self.system.emit('variable_get', selctInstances, selctVariable, (definitions) => (temp = definitions))
 				// 	// cmd = String(bank.text.split('$(')[0]) + temp + String(bank.text.split('$(')[1]).split(')')[1]
@@ -317,14 +297,12 @@ exports.UpdateFeedbacks = async function (self) {
 				// 		cmd = temp
 				// 	})
 				// }
-
 				// // If the text is longer that 24 characters split it up in two
 				// if (cmd.length >= 25) {
 				// 	x = cmd.split('\\n')
 				// 	if (x.length >= 3) {
 				// 		cmd = cmd.replace(' ', '\\n')
 				// 	}
-
 				// 	if (x.length <= 2) {
 				// 		// cmd = cmd.substr(0, 24) + '\\n' + cmd.substr(24, cmd.length)
 				// 		y = cmd.match(/.{1,24}/g)
@@ -336,13 +314,12 @@ exports.UpdateFeedbacks = async function (self) {
 				// 		}
 				// 	}
 				// }
-
 				// // If the text includes a line break, replace it with a space
 				// if (cmd.includes('\\n')) {
 				// 	x = cmd.split('\\n')
 				// 	if (x.length == 2) {
 				// 		console.log(x.length)
-				// 		self.sendCommand(self, 
+				// 		self.sendCommand(self,
 				// 			'HWCt#' +
 				// 				feedback.options.hwc +
 				// 				'=' +
@@ -361,12 +338,12 @@ exports.UpdateFeedbacks = async function (self) {
 				// 		self.sendCommand(self, 'HWCt#' + feedback.options.hwc + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 				// 	} else {
 				// 		cmd = cmd.split('\\n').join(' ')
-				// 		self.sendCommand(self, 
+				// 		self.sendCommand(self,
 				// 			'HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||'
 				// 		)
 				// 	}
 				// } else {
-				// 	self.sendCommand(self, 
+				// 	self.sendCommand(self,
 				// 		'HWCt#' + feedback.options.hwc + '=' + '|||' + 'Comp ' + info.page + ':' + info.bank + '|1|' + cmd + '||'
 				// 	)
 				// }

@@ -9,27 +9,27 @@ exports.storeData = function (str) {
 			switch (x[0]) {
 				case '_model':
 					this.data.model = x[1]
-					this.setVariableValues({'model': this.data.model})
+					this.setVariableValues({ model: this.data.model })
 					if (this.config.debug) {
 						this.log('warn', 'Recived: ' + x[0] + ': ' + x[1])
 					}
 					break
 				case '_serial':
 					this.data.serial = x[1]
-					this.setVariableValues({'serial_nr': this.data.serial})
-					if (this.config.debug) {
-						this.log('warn', 'Recived: ' + x[0] + ': ' + x[1])
-					}
-					break
-				case '_version':
-					this.data.version = x[1]
-					this.setVariableValues({'version': this.data.version})
+					this.setVariableValues({ serial_nr: this.data.serial })
 					if (this.config.debug) {
 						this.log('warn', 'Recived: ' + x[0] + ': ' + x[1])
 					}
 
 					if (this.data.startupAPI == true) {
 						this.satelliteAPI.bind(this)()
+					}
+					break
+				case '_version':
+					this.data.version = x[1]
+					this.setVariableValues({ version: this.data.version })
+					if (this.config.debug) {
+						this.log('warn', 'Recived: ' + x[0] + ': ' + x[1])
 					}
 					break
 				default:
@@ -380,25 +380,25 @@ exports.storeData = function (str) {
 
 		// this.log('debug', json_hwc.type)
 		// Update variables for: Faders, Joysticks and Potmeters
-		if (json_hwc.type !== null && json_hwc.type !== {} && json_hwc.type !== undefined) {
+		if (json_hwc.type !== null && json_hwc.type !== undefined) {
 			value = 0
 			if (hwc.val !== null) {
 				value = hwc.val
 			}
 
-			let variableObj = {};
-			variableObj['Hwc_' + hwc.id] = value;
+			let variableObj = {}
+			variableObj['Hwc_' + hwc.id] = value
 
 			if (json_hwc.type.in === 'av') {
-				this.setVariableValues(variableObj);
+				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'ah') {
-				this.setVariableValues(variableObj);
+				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'ar') {
-				this.setVariableValues(variableObj);
+				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'iv' || json_hwc.type.in === 'ih') {
-				this.setVariableValues(variableObj);
+				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'ir') {
-				this.setVariableValues(variableObj);
+				this.setVariableValues(variableObj)
 			}
 		}
 

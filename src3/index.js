@@ -143,7 +143,7 @@ class RawPanelInstance extends InstanceBase {
 
 		this.log('debug', 'destroy')
 	}
-	
+
 	// Return config fields for web config
 	getConfigFields() {
 		return ConfigFields
@@ -174,7 +174,6 @@ class RawPanelInstance extends InstanceBase {
 		let b = this.normalizeBetweenTwoRanges(simpelColor.b, 0, 255, 0, 3)
 		return (r | g | b) + 128 + 64
 	}
-
 }
 
 runEntrypoint(RawPanelInstance, UpgradeScripts)
