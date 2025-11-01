@@ -11,6 +11,13 @@ Things to fix:
 
 # Path Notes
 
+**V2.1.1**
+ - Add ability to disable the title prefix "Comp Key: X", via a config toogle
+
+**V2.1.0**
+ - Fix connection issues when connecting via the SKAARHOJ Rawpanel Server core
+ - Update companion module base and tools
+
 **V2.0.1**
  - Fix Compile Issues
 
