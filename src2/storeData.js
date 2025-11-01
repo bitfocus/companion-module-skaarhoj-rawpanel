@@ -384,7 +384,7 @@ exports.storeData = function (str) {
 
 		// this.debug(json_hwc.type)
 		// Update variables for: Faders, Joysticks and Potmeters
-		if (json_hwc.type !== null && json_hwc.type !== {} && json_hwc.type !== undefined) {
+		if (json_hwc.type !== null && json_hwc.type !== undefined) {
 			if (json_hwc.type.in === 'av') {
 				if (hwc.val !== null) {
 					this.setVariable(`Hwc_${hwc.id}_${json_hwc.txt}`, hwc.val)
