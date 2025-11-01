@@ -268,6 +268,20 @@ exports.ConfigFields = [
 	},
 	{
 		type: 'checkbox',
+		id: 'titlePrefix',
+		width: 1,
+		label: 'Enable',
+		default: true,
+	},
+	{
+		type: 'static-text',
+		id: 'titlePrefixInfo',
+		width: 11,
+		label: 'Enable Title Prefix',
+		value: "If enabled, all titles in displays will be prefixed with 'Comp Key: <number>' on the SKAARHOJ panel.",
+	},
+	{
+		type: 'checkbox',
 		id: 'autoDim',
 		width: 1,
 		label: 'Enable',

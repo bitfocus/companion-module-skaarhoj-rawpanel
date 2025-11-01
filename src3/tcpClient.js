@@ -144,21 +144,37 @@ exports.tcpClient = function () {
 									x = cmd.split('\\n')
 									if (x.length == 2) {
 										// console.log(x.length)
-										self.sendCommand(
-											'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
-										)
+										if (self.config.titlePrefix == true) {
+											self.sendCommand(
+												'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
+											)
+										} else {
+											self.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + x[0] + '|' + x[1] + '||')
+										}
 									} else if (x.length == 3) {
 										self.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 									} else {
 										cmd = cmd.split('\\n').join(' ')
-										self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+										if (self.config.titlePrefix == true) {
+											self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+										} else {
+											self.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+										}
 									}
 								} else {
-									self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+									if (self.config.titlePrefix == true) {
+										self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+									} else {
+										self.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+									}
 								}
 							} else {
 								// Send Placeholder Text to the LCD's if there is no other text
-								self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+								if (self.config.titlePrefix == true) {
+									self.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+								} else {
+									self.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + '||') // No Title Prefix
+								}
 							}
 						}
 					}

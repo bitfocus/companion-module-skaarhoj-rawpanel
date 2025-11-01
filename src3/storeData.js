@@ -155,19 +155,37 @@ exports.storeData = function (str) {
 						x = cmd.split('\\n')
 						if (x.length == 2) {
 							// console.log(x.length)
-							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+							if (this.config.titlePrefix == true) {
+								this.sendCommand(
+									'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
+								)
+							} else {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + x[0] + '|' + x[1] + '|')
+							}
 						} else if (x.length == 3) {
 							this.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 						} else {
 							cmd = cmd.split('\\n').join(' ')
-							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+							if (this.config.titlePrefix == true) {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+							} else {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+							}
 						}
 					} else {
-						this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+						if (this.config.titlePrefix == true) {
+							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+						} else {
+							this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+						}
 					}
 				} else {
 					// Send Placeholder Text to the LCD's if there is no other text
-					this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+					if (this.config.titlePrefix == true) {
+						this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+					} else {
+						this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + '||')
+					}
 				}
 			}
 		}
@@ -252,19 +270,37 @@ exports.storeData = function (str) {
 						x = cmd.split('\\n')
 						if (x.length == 2) {
 							// console.log(x.length)
-							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|')
+							if (this.config.titlePrefix == true) {
+								this.sendCommand(
+									'HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + x[0] + '|' + x[1] + '|'
+								)
+							} else {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + x[0] + '|' + x[1] + '|')
+							}
 						} else if (x.length == 3) {
 							this.sendCommand('HWCt#' + text_key + '=' + '|||' + x[0] + '|1|' + x[1] + '|' + x[2] + '|')
 						} else {
 							cmd = cmd.split('\\n').join(' ')
-							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+							if (this.config.titlePrefix == true) {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+							} else {
+								this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+							}
 						}
 					} else {
-						this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+						if (this.config.titlePrefix == true) {
+							this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key: ' + key + '|1|' + cmd + '||')
+						} else {
+							this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + cmd + '||')
+						}
 					}
 				} else {
 					// Send Placeholder Text to the LCD's if there is no other text
-					this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+					if (this.config.titlePrefix == true) {
+						this.sendCommand('HWCt#' + text_key + '=' + '|||' + 'Comp Key:|1|' + key + '||')
+					} else {
+						this.sendCommand('HWCt#' + text_key + '=' + '|||' + '|1|' + '||')
+					}
 				}
 			}
 		}
