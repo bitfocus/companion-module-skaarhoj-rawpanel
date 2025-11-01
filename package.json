@@ -1,6 +1,6 @@
 {
 	"name": "skaarhoj-rawpanel",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"main": "src3/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -13,20 +13,11 @@
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"dependencies": {
-		"18": "^0.0.0",
-		"@companion-module/base": "~1.4.1",
-		"got": "^12.0.1",
-		"node": "^20.5.0"
+		"@companion-module/base": "~1.12.0",
+		"got": "^14.4.7"
 	},
 	"devDependencies": {
-		"@companion-module/tools": "^1.3.1"
+		"@companion-module/tools": "^2.3.0"
 	},
-	"lint-staged": {
-		"*.{js,json,md}": [
-			"prettier --write"
-		]
-	},
-	"engines": {
-		"node": ">=18.0.0"
-	}
+	"packageManager": "yarn@4.9.1"
 }
