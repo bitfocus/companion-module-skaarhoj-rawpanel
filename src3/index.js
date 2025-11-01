@@ -88,6 +88,11 @@ class RawPanelInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		// set title prefix to true if not defined
+		if (this.config.titlePrefix === undefined) {
+			this.config.titlePrefix = true
+		}
+
 		this.updateStatus(InstanceStatus.Connecting)
 
 		this.updateActions() // export actions
