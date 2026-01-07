@@ -11,6 +11,9 @@ Things to fix:
 
 # Path Notes
 
+**V2.2.1**
+ - Cleanup leftover logs
+
 **V2.2.0**
  - Add Variabled for all components, that provide either, pressed state, Pulsed value or speed/position
  - Add Support for parsing variable in all input fields that can take text inputs
