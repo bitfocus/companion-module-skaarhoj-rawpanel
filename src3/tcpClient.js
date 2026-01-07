@@ -235,7 +235,7 @@ exports.tcpClient = function () {
 				default:
 					str_line = str.split('\n')
 					for (let index = 0; index < str_line.length; index++) {
-						// self.log('debug', str_line[index])
+						self.log('info', str_line[index])
 						self.storeData(str_line[index])
 					}
 					break

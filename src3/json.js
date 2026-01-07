@@ -44,7 +44,9 @@ exports.handleJSON = function (buffer) {
 	const changes = new Set([])
 
 	this.json_data = json_data
-	// console.log(json_data.hwc)
+	// if (this.config.debug) {
+	// 	this.log('warn', 'Recived: HWC: ' + JSON.stringify(json_data.hwc))
+	// }
 
 	this.UpdateVariableDefinitions(this)
 }

@@ -1,3 +1,35 @@
+// Helper function to set timeout for resetting encoder pulse values
+function setEncoderResetTimeout(
+	instance,
+	encoderId,
+	pulse,
+	resetVariableName,
+	resetPulse = '0',
+	timeoutDuration = 1000
+) {
+	if (pulse !== '') {
+		// Clear existing timeout if any
+		if (instance.encoderTimeouts[encoderId]) {
+			clearTimeout(instance.encoderTimeouts[encoderId])
+		}
+		instance.log('warn', `Setting timeout for encoder ${encoderId} with pulse ${pulse}`)
+		// Set new timeout to reset pulse to 0 after 1 second
+		instance.encoderTimeouts[encoderId] = setTimeout(() => {
+			try {
+				instance.log('warn', `Resetting encoder ${encoderId} ${resetVariableName} to 0`)
+				const resetObj = {}
+				resetObj[resetVariableName] = resetPulse
+				instance.log('warn', `Reset object: ${JSON.stringify(resetObj)}`)
+				instance.setVariableValues(resetObj)
+				instance.log('warn', `Variable reset complete for encoder ${encoderId}`)
+				delete instance.encoderTimeouts[encoderId]
+			} catch (error) {
+				instance.log('error', `Error resetting encoder ${encoderId}: ${error.message}`)
+			}
+		}, timeoutDuration)
+	}
+}
+
 exports.storeData = function (str) {
 	data = this.data
 
@@ -414,7 +446,63 @@ exports.storeData = function (str) {
 			}
 		}
 
+		// this.log('warn', json_hwc)
 		// this.log('debug', json_hwc.type)
+		// Update variables for: Buttons, GPI's and other pressed HWCs
+		if (json_hwc.type !== null && json_hwc.type !== undefined) {
+			value = 'false'
+			if (hwc.press !== '') {
+				value = hwc.press
+			}
+
+			edge = ''
+			if (hwc.side !== '') {
+				edge = hwc.side
+			}
+
+			pulse = ''
+			if (hwc.val !== '') {
+				pulse = hwc.val
+			}
+
+			let variableObj = {}
+			variableObj[`Hwc_${hwc.id}_press`] = value
+
+			let variableObj_edge = {}
+			variableObj_edge[`Hwc_${hwc.id}_edge`] = edge
+
+			let variableObj_pulse = {}
+			variableObj_pulse[`Hwc_${hwc.id}_pulse`] = pulse
+
+			if (json_hwc.type.in === 'b') {
+				this.setVariableValues(variableObj)
+			} else if (json_hwc.type.in === 'b4' || json_hwc.type.in === 'b2v' || json_hwc.type.in === 'b2h') {
+				this.setVariableValues(variableObj)
+				this.setVariableValues(variableObj_edge)
+			} else if (json_hwc.type.in === 'gpi') {
+				this.setVariableValues(variableObj)
+			} else if (json_hwc.type.in === 'pb') {
+				// encoders (pulses + button)
+				this.setVariableValues(variableObj)
+				this.setVariableValues(variableObj_pulse)
+
+				// Set timeout to reset pulse after 1 second
+				setEncoderResetTimeout(this, hwc.id, pulse, `Hwc_${hwc.id}_pulse`, '0', 500)
+			} else if (json_hwc.type.in === 'pi') {
+				// encoder with intensity mode (pulses + speed value)
+				this.setVariableValues(variableObj_pulse)
+
+				// Set timeout to reset pulse after 1 second
+				setEncoderResetTimeout(this, hwc.id, pulse, `Hwc_${hwc.id}_pulse`, '0', 500)
+			} else if (json_hwc.type.in === 'p') {
+				// encoders (pulses, no button)
+				this.setVariableValues(variableObj_pulse)
+
+				// Set timeout to reset pulse after 1 second
+				setEncoderResetTimeout(this, hwc.id, pulse, `Hwc_${hwc.id}_pulse`, '0', 500)
+			}
+		}
+
 		// Update variables for: Faders, Joysticks and Potmeters
 		if (json_hwc.type !== null && json_hwc.type !== undefined) {
 			value = 0
@@ -423,8 +511,7 @@ exports.storeData = function (str) {
 			}
 
 			let variableObj = {}
-			variableObj['Hwc_' + hwc.id] = value
-
+			variableObj[`Hwc_${hwc.id}_value`] = value
 			if (json_hwc.type.in === 'av') {
 				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'ah') {
@@ -435,10 +522,28 @@ exports.storeData = function (str) {
 				this.setVariableValues(variableObj)
 			} else if (json_hwc.type.in === 'ir') {
 				this.setVariableValues(variableObj)
+			} else if (json_hwc.type.in === 'pi') {
+				this.setVariableValues(variableObj)
 			}
 		}
 
-		// if (this.config.debug) {this.log('warn','Recived: HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val + ' | CMD: HWC#' + str)}
+		if (this.config.debug) {
+			this.log(
+				'warn',
+				'Recived: HWC: ' +
+					hwc.id +
+					' | Type: ' +
+					hwc.type +
+					' | Side: ' +
+					hwc.side +
+					' | Press: ' +
+					hwc.press +
+					' | Val: ' +
+					hwc.val +
+					' | CMD: HWC#' +
+					str
+			)
+		}
 		// this.log('debug', 'HWC: ' + hwc.id + ' | Type: ' + hwc.type + ' | Side: ' + hwc.side + ' | Press: ' + hwc.press + ' | Val: ' + hwc.val + ' | CMD: HWC#' + str)
 
 		this.data.hwc = hwc

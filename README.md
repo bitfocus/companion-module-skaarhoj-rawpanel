@@ -11,6 +11,10 @@ Things to fix:
 
 # Path Notes
 
+**V2.2.0**
+ - Add Variabled for all components, that provide either, pressed state, Pulsed value or speed/position
+ - Add Support for parsing variable in all input fields that can take text inputs
+
 **V2.1.1**
  - Add ability to disable the title prefix "Comp Key: X", via a config toogle
 

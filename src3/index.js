@@ -68,6 +68,9 @@ class RawPanelInstance extends InstanceBase {
 		}
 		this.clients = []
 
+		// Track encoder pulse timeouts for auto-reset
+		this.encoderTimeouts = {}
+
 		// this.config.host = this.config.host || ''
 		// this.config.tcpPort = this.config.tcpPort || 9923
 		// this.config.timeout = this.config.timeout !== undefined ? this.config.timeout : 5000

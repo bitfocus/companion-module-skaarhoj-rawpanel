@@ -79,6 +79,7 @@ exports.UpdateActions = function (self) {
 					label: 'Title Text',
 					width: 4,
 					default: '',
+					useVariables: true,
 				},
 				{
 					type: 'checkbox',
@@ -91,12 +92,14 @@ exports.UpdateActions = function (self) {
 					id: 'label1',
 					label: 'Label 1',
 					default: '',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					id: 'label2',
 					label: 'Label 2',
 					default: '',
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
@@ -197,6 +200,7 @@ exports.UpdateActions = function (self) {
 					label: 'Command:',
 					tooltip: 'Custom rawpanel commands in string form',
 					default: '',
+					useVariables: true,
 				},
 			],
 			callback: async (action) => {
