@@ -19,7 +19,7 @@ exports.UpdateVariableDefinitions = async function (self) {
 	// Detect Buttons, Faders, Joysticks and Potmeters, and generate variables for them, with their current values
 	self.json_data.hwc.forEach((hwc) => {
 		if (hwc.type.in !== null) {
-			self.log('info', `Detected HWC Input: ID=${hwc.id}, Type=${hwc.type.in}, Text='${hwc.txt}'`)
+			// self.log('info', `Detected HWC Input: ID=${hwc.id}, Type=${hwc.type.in}, Text='${hwc.txt}'`)
 
 			if (hwc.type.in === 'b') {
 				variables.push({

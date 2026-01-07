@@ -12,16 +12,14 @@ function setEncoderResetTimeout(
 		if (instance.encoderTimeouts[encoderId]) {
 			clearTimeout(instance.encoderTimeouts[encoderId])
 		}
-		instance.log('warn', `Setting timeout for encoder ${encoderId} with pulse ${pulse}`)
+		// instance.log('info', `Setting timeout for encoder ${encoderId} with pulse ${pulse}`)
 		// Set new timeout to reset pulse to 0 after 1 second
 		instance.encoderTimeouts[encoderId] = setTimeout(() => {
 			try {
-				instance.log('warn', `Resetting encoder ${encoderId} ${resetVariableName} to 0`)
+				// instance.log('info', `Resetting encoder ${encoderId} ${resetVariableName} to 0`)
 				const resetObj = {}
 				resetObj[resetVariableName] = resetPulse
-				instance.log('warn', `Reset object: ${JSON.stringify(resetObj)}`)
 				instance.setVariableValues(resetObj)
-				instance.log('warn', `Variable reset complete for encoder ${encoderId}`)
 				delete instance.encoderTimeouts[encoderId]
 			} catch (error) {
 				instance.log('error', `Error resetting encoder ${encoderId}: ${error.message}`)
